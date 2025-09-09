@@ -1,11 +1,12 @@
-package entity;
+package entity.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+//CONTIENE TUTTE LE INFO PROVENIENTI DAL FRONTEND ED INSERITE DALL UTENTE RIGUARDO LA SUA RICHIESTA
 
 public class NuovaRichiestaDTO {
     

@@ -1,4 +1,4 @@
-package entity;
+package entity.database;
 
 import enumerazioni.LivelloEsperienza;
 
