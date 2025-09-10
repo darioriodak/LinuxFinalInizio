@@ -41,5 +41,9 @@ public class Distribuzione {
 
     public boolean isAttiva() { return attiva; }
     public void setAttiva(boolean attiva) { this.attiva = attiva; }
+    
+    public String toString() {
+    	return "nome " + this.nome + " versione " + this.versione + " ambiente desktop " + this.ambienteDesktop + " categoria " + this.categoria + " descrizione " + this.descrizione;
+    }
 
 }
