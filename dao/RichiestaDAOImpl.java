@@ -196,5 +196,21 @@ private String ip, port, dbName, userName, pwd;
         
         return richiesta;
     }
+    
+    public void aggiornaStato(int idRichiesta, StatoRichiesta nuovoStato) throws SQLException {
+        String sql = "UPDATE Richiesta SET stato_richiesta = ? WHERE id_richiesta = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, nuovoStato.name().toLowerCase());
+            pstmt.setInt(2, idRichiesta);
+            
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Aggiornamento stato richiesta fallito, richiesta non trovata.");
+            }
+        }
+    }
 
 }

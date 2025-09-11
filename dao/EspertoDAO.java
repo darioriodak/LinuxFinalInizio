@@ -15,5 +15,6 @@ public interface EspertoDAO {
 	void eliminaById(int idEsperto) throws SQLException;
 	List<Esperto> getTuttiEspertiAttivi() throws SQLException;
 	boolean esisteEsperto(int idEsperto) throws SQLException;
+	Esperto findByIdUtente(int idUtente) throws SQLException;
 
 }

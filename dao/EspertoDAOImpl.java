@@ -87,6 +87,25 @@ private String ip, port, dbName, userName, pwd;
         return null;
     }
     
+    public Esperto findByIdUtente(int idUtente) throws SQLException {
+        String sql = "SELECT id_esperto, id_utente, specializzazione, anni_esperienza, " +
+                    "feedback_medio, numero_valutazioni, attivo, data_registrazione " +
+                    "FROM Esperto WHERE id_utente = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, idUtente);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToEsperto(rs);
+                }
+            }
+        }
+        return null;
+    }
+    
     
     public void aggiorna(Esperto esperto) throws SQLException {
         String sql = "UPDATE Esperto SET specializzazione = ?, anni_esperienza = ?, " +
