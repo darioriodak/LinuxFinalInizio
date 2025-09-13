@@ -158,7 +158,7 @@ private String ip, port, dbName, userName, pwd;
         
         String tipoSistema = rs.getString("tipo_sistema");
         if (tipoSistema != null) {
-            profilo.setTipoSistema(TipoSistema.valueOf(tipoSistema));
+            profilo.setTipoSistema(TipoSistema.valueOf(tipoSistema.toUpperCase()));
         }
         
         profilo.setDataCreazione(rs.getTimestamp("data_creazione"));

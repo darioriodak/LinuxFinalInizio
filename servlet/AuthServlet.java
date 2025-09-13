@@ -1,11 +1,6 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,13 +13,18 @@ import dao.*;
 import entity.database.*;
 import entity.dto.*;
 import enumerazioni.LivelloEsperienza;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import entity.database.BCrypt;
 
 /**
  * Servlet per gestione autenticazione, registrazione utenti ed esperti
  * Endpoints: /register-user, /register-expert, /login, /logout
  */
-//@WebServlet("/AuthServlet/*")
+
 public class AuthServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     

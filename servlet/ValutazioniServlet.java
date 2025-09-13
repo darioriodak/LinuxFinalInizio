@@ -25,7 +25,7 @@ import enumerazioni.*;
  * Servlet per gestione valutazioni degli esperti
  * Endpoints: /richieste-pending, /richiesta/{id}, /invia, /mie-completate
  */
-@WebServlet("/ValutazioniServlet/*")
+
 public class ValutazioniServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     

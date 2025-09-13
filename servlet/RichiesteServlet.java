@@ -27,7 +27,7 @@ import enumerazioni.*;
  * Servlet per gestione richieste utente
  * Endpoints: /nuova, /mie, /{id}, /{id}/risultati
  */
-@WebServlet("/RichiesteServlet/*")
+
 public class RichiesteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     

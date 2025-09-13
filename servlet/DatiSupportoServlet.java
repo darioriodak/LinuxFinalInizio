@@ -22,7 +22,7 @@ import entity.database.*;
 import entity.dto.*;
 
 
-@WebServlet("/DatiSupportoServlet")
+
 public class DatiSupportoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,9 +30,7 @@ public class DatiSupportoServlet extends HttpServlet {
     private EspertoDAO espertoDAO;
     private UtenteDAO utenteDAO;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public DatiSupportoServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -58,9 +56,7 @@ public class DatiSupportoServlet extends HttpServlet {
         this.utenteDAO = new UtenteDAOImpl(ip, port, dbName, userName, password);
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("application/json");
@@ -152,7 +148,7 @@ public class DatiSupportoServlet extends HttpServlet {
     }
     
     /**
-     * GET /api/esperti
+     * 
      * Restituisce lista di tutti gli esperti attivi per selezione manuale
      * @throws JSONException 
      */
