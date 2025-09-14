@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="architetture_cpu_array">
+        <item>x86_64</item>
+        <item>i686</item>
+    </string-array>
+
+    <string-array name="cpu_tier_array">
+        <item>Moderna</item>
+        <item>Media</item>
+        <item>Vecchia</item>
+    </string-array>
+
+    <string-array name="tipo_archiviazione_array">
+        <item>SSD</item>
+        <item>HDD</item>
+    </string-array>
+
+    <string-array name="livelli_esperienza_array">
+        <item>Principiante</item>
+        <item>Intermedio</item>
+        <item>Esperto</item>
+    </string-array>
+
+    <string-array name="use_case_array">
+        <item>Uso generico (Navigazione, Ufficio)</item>
+        <item>Sviluppo Software</item>
+        <item>Gaming</item>
+        <item>Multimedia (Grafica, Video)</item>
+        <item>Recupero PC datato</item>
+        <item>Server</item>
+    </string-array>
+
+    <string-array name="desktop_environments_array">
+        <item>Nessuna preferenza</item>
+        <item>GNOME</item>
+        <item>KDE Plasma</item>
+        <item>XFCE</item>
+        <item>Cinnamon</item>
+        <item>MATE</item>
+        <item>LXQt</item>
+    </string-array>
+
+    <string-array name="gpu_producers_array">
+        <item>Nvidia</item>
+        <item>AMD</item>
+        <item>Intel</item>
+        <item>Altro</item>
+    </string-array>
+
+</resources>

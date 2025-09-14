@@ -95,8 +95,6 @@ public class DettagliRichiestaPerEspertoDTO {
             distroJson.put("categoria", distro.getCategoria());
             distroJson.put("descrizione", distro.getDescrizione());
             distroJson.put("requisiti", distro.getRequisitiHardware());
-            distroJson.put("pregi", distro.getPregi());
-            distroJson.put("difetti", distro.getDifetti());
             distribuzioniArray.put(distroJson);
         }
         json.put("distribuzioniDaValutare", distribuzioniArray);

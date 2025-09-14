@@ -11,8 +11,6 @@ public class DistribuzioneCompletaDTO {
     private String categoria;
     private String descrizione;
     private String requisitiHardware;
-    private String pregi;
-    private String difetti;
     
     public DistribuzioneCompletaDTO() {}
     
@@ -44,11 +42,6 @@ public class DistribuzioneCompletaDTO {
     public String getRequisitiHardware() { return requisitiHardware; }
     public void setRequisitiHardware(String requisitiHardware) { this.requisitiHardware = requisitiHardware; }
     
-    public String getPregi() { return pregi; }
-    public void setPregi(String pregi) { this.pregi = pregi; }
-    
-    public String getDifetti() { return difetti; }
-    public void setDifetti(String difetti) { this.difetti = difetti; }
 
 
 }

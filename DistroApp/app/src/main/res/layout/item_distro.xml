@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewNomeDistro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome Distro"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/textViewAnno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anno di fondazione..."/>
+
+        <TextView
+            android:id="@+id/textViewRamMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="RAM Minima..."/>
+
+        <TextView
+            android:id="@+id/textViewGestorePacchetti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Gestore Pacchetti..."/>
+
+        <TextView
+            android:id="@+id/textViewNumeroPacchetti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Numero Pacchetti..."/>
+
+        <TextView
+            android:id="@+id/textViewBeginnerFriendly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Per Principianti..."/>
+
+        <Button
+            android:id="@+id/buttonScaricaGuida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostra Guida..." />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

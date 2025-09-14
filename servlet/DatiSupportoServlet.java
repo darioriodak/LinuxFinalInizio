@@ -29,6 +29,7 @@ public class DatiSupportoServlet extends HttpServlet {
 	private DistroDAO distroDAO;
     private EspertoDAO espertoDAO;
     private UtenteDAO utenteDAO;
+    private DistroSummaryDAO distroSummaryDAO;
        
     
     public DatiSupportoServlet() {
@@ -54,6 +55,7 @@ public class DatiSupportoServlet extends HttpServlet {
         this.distroDAO = new DistroDAOImpl(ip, port, dbName, userName, password);
         this.espertoDAO = new EspertoDAOImpl(ip, port, dbName, userName, password);
         this.utenteDAO = new UtenteDAOImpl(ip, port, dbName, userName, password);
+        this.distroSummaryDAO = new DistroSummaryDAOImpl(ip, port, dbName, userName, password);
     }
 
 	
@@ -89,6 +91,9 @@ public class DatiSupportoServlet extends HttpServlet {
                     break;
                 case "/esperti":
                     gestisciGetEsperti(request, response);
+                    break;
+                case "/distribuzioni-summary":
+                    gestisciGetDistribuzioniSummary(request, response);
                     break;
                 default:
                     // Pattern per singoli elementi: /distribuzione/123, /esperto/456
@@ -217,8 +222,6 @@ public class DatiSupportoServlet extends HttpServlet {
             distroJson.put("categoria", distribuzione.getCategoria());
             distroJson.put("descrizione", distribuzione.getDescrizione());
             distroJson.put("requisitiHardware", distribuzione.getRequisitiHardware());
-            distroJson.put("pregi", distribuzione.getPregi());
-            distroJson.put("difetti", distribuzione.getDifetti());
             
             jsonResponse.put("distribuzione", distroJson);
             
@@ -295,6 +298,63 @@ public class DatiSupportoServlet extends HttpServlet {
 
         	
             //inviaErrore(response, 400, "ID esperto non valido");
+        }
+    }
+    
+    /**
+     * GET /DatiSupportoServlet/distribuzioni-summary
+     * Restituisce lista semplificata distribuzioni per interfaccia utente
+     */
+    private void gestisciGetDistribuzioniSummary(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        
+        try {
+            // Recupera tutte le distribuzioni summary
+            List<DistroSummaryDTO> summaries = distroSummaryDAO.getAllDistroSummaries();
+            
+            // Costruisci risposta JSON
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("success", true);
+            jsonResponse.put("count", summaries.size());
+            
+            // Array delle distribuzioni
+            JSONArray jsonArray = new JSONArray();
+            for (DistroSummaryDTO summary : summaries) {
+                JSONObject summaryJson = new JSONObject();
+                
+                // Campi essenziali
+                summaryJson.put("id", summary.getId());
+                summaryJson.put("idDistribuzione", summary.getIdDistribuzione());
+                summaryJson.put("nomeDisplay", summary.getNomeDisplay());
+                summaryJson.put("descrizioneBreve", summary.getDescrizioneBreve());
+                summaryJson.put("descrizioneDettaglio", summary.getDescrizioneDettaglio());
+                
+                // Elementi visual per UI
+                summaryJson.put("icona", summary.getIcona());
+                summaryJson.put("coloreHex", summary.getColoreHex());
+                summaryJson.put("livelloDifficolta", summary.getLivelloDifficolta());
+                summaryJson.put("punteggioPopolarita", summary.getPunteggioPopolarita());
+                summaryJson.put("stellePopolarita", summary.getStellePopolrita()); // "★★★★☆"
+                
+                jsonArray.put(summaryJson);
+            }
+            
+            jsonResponse.put("distribuzioni", jsonArray);
+            
+            // Invia risposta
+            response.setStatus(200);
+            PrintWriter out = response.getWriter();
+            out.print(jsonResponse.toString());
+            out.flush();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+            response.getWriter().append("Errore accesso database: " + e.getMessage());
+            
+        } catch (Exception e) {
+        	response.setStatus(500);
+            response.getWriter().append("Errore accesso database: " + e.getMessage());
         }
     }
     

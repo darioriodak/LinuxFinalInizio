@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Hardware"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Architettura Cpu" />
+        <Spinner
+            android:id="@+id/spinnerArchitetturaCpu"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/architetture_cpu_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Fascia Cpu" />
+        <Spinner
+            android:id="@+id/spinnerCpuTier"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/cpu_tier_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Quantità memoria Ram in GB" />
+
+        <EditText
+            android:id="@+id/editTextRamGB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:hint="Inserisci un valore in GB (max 128)" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Spazio Archiviazione" />
+
+        <EditText
+            android:id="@+id/editTextSpazioArchiviazione"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:hint="Inserisci un valore in GB (max 3000)"/>
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Tipo Archiviazione" />
+        <Spinner
+            android:id="@+id/spinnerTipoArchiviazione"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/tipo_archiviazione_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Produttore Gpu" />
+
+        <Spinner
+            android:id="@+id/spinnerProduttoreGpu"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/gpu_producers_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Modello Gpu" />
+
+        <EditText
+            android:id="@+id/editTextModelloGpu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:minHeight="48dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="Preferenze"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Livello Esperienza" />
+        <Spinner
+            android:id="@+id/spinnerLivelloEsperienza"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/livelli_esperienza_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Caso D'uso" />
+        <Spinner
+            android:id="@+id/spinnerUseCase"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/use_case_array" />
+
+        <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Ambiente Desktop" />
+        <Spinner
+            android:id="@+id/spinnerAmbienteDesktopPreferito"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:entries="@array/desktop_environments_array" />
+
+        <Button
+            android:id="@+id/buttonSuggerisci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="Suggerisci Distro" />
+
+    </LinearLayout>
+</ScrollView>

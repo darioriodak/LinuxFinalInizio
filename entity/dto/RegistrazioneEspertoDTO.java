@@ -17,11 +17,6 @@ public class RegistrazioneEspertoDTO {
     private int anniEsperienza;       // Anni di esperienza con Linux
     private String motivazione;       // Perché vuole diventare esperto
     
-    // Dati opzionali per verifica credibilità
-    private String certificazioni;    // Certificazioni possedute
-    private String linkedin;          // Profilo LinkedIn
-    private String github;            // Profilo GitHub
-    private String biografia;         // Breve biografia professionale
     
     // Costruttori
     public RegistrazioneEspertoDTO() {}
@@ -92,29 +87,6 @@ public class RegistrazioneEspertoDTO {
             email, password, specializzazione, anniEsperienza, motivazione
         );
         
-        // Campi opzionali
-        if (json.has("certificazioni") && !json.getString("certificazioni").trim().isEmpty()) {
-            dto.setCertificazioni(json.getString("certificazioni").trim());
-        }
-        
-        if (json.has("linkedin") && !json.getString("linkedin").trim().isEmpty()) {
-            String linkedin = json.getString("linkedin").trim();
-            if (isValidUrl(linkedin)) {
-                dto.setLinkedin(linkedin);
-            }
-        }
-        
-        if (json.has("github") && !json.getString("github").trim().isEmpty()) {
-            String github = json.getString("github").trim();
-            if (isValidUrl(github)) {
-                dto.setGithub(github);
-            }
-        }
-        
-        if (json.has("biografia") && !json.getString("biografia").trim().isEmpty()) {
-            dto.setBiografia(json.getString("biografia").trim());
-        }
-        
         return dto;
     }
     
@@ -127,19 +99,7 @@ public class RegistrazioneEspertoDTO {
         json.put("specializzazione", specializzazione);
         json.put("anniEsperienza", anniEsperienza);
         json.put("motivazione", motivazione);
-        
-        if (certificazioni != null) {
-            json.put("certificazioni", certificazioni);
-        }
-        if (linkedin != null) {
-            json.put("linkedin", linkedin);
-        }
-        if (github != null) {
-            json.put("github", github);
-        }
-        if (biografia != null) {
-            json.put("biografia", biografia);
-        }
+     
         
         // NON includere password per sicurezza!
         return json.toString();
@@ -148,10 +108,6 @@ public class RegistrazioneEspertoDTO {
     // Metodi di validazione
     private static boolean isValidEmail(String email) {
         return email != null && email.contains("@") && email.contains(".") && email.length() > 5;
-    }
-    
-    private static boolean isValidUrl(String url) {
-        return url != null && (url.startsWith("http://") || url.startsWith("https://")) && url.length() > 10;
     }
     
     // Getters e Setters
@@ -176,17 +132,6 @@ public class RegistrazioneEspertoDTO {
     public String getMotivazione() { return motivazione; }
     public void setMotivazione(String motivazione) { this.motivazione = motivazione; }
     
-    public String getCertificazioni() { return certificazioni; }
-    public void setCertificazioni(String certificazioni) { this.certificazioni = certificazioni; }
-    
-    public String getLinkedin() { return linkedin; }
-    public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
-    
-    public String getGithub() { return github; }
-    public void setGithub(String github) { this.github = github; }
-    
-    public String getBiografia() { return biografia; }
-    public void setBiografia(String biografia) { this.biografia = biografia; }
     
     @Override
     public String toString() {
