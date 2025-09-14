@@ -28,6 +28,9 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -82,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private  static class LoginTask extends AsyncTask<String, Void, Integer> {
+    private static class LoginTask extends AsyncTask<String, Void, String> {
 
         private final WeakReference<LoginActivity> activityReference;
 
@@ -98,11 +101,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(String... params) {
-
-            // return 200; // Simula un successo per test
+        protected String doInBackground(String... params) {  // ← Cambiato return type
             String jsonInputString = params[0];
             HttpURLConnection urlConnection = null;
+            String responseBody = null;  // ← Nuovo: leggiamo il body della risposta
             int responseCode = -1;
 
             try {
@@ -118,7 +120,14 @@ public class LoginActivity extends AppCompatActivity {
                     byte[] input = jsonInputString.getBytes("utf-8");
                     os.write(input, 0, input.length);
                 }
+
                 responseCode = urlConnection.getResponseCode();
+
+                // ✅ NUOVO: Leggi il body della risposta se login OK
+                if (responseCode == 200) {
+                    responseBody = leggiStream(urlConnection.getInputStream());
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -126,31 +135,71 @@ public class LoginActivity extends AppCompatActivity {
                     urlConnection.disconnect();
                 }
             }
-            return responseCode;
+
+            // ✅ NUOVO: Ritorna il JSON response invece del solo status code
+            if (responseCode == 200 && responseBody != null) {
+                return responseBody;
+            } else {
+                return String.valueOf(responseCode); // Per errori, ritorna solo il codice
+            }
         }
 
         @Override
-        protected void onPostExecute(Integer responseCode) {
+        protected void onPostExecute(String result) {  // ← Cambiato parametro
             LoginActivity activity = activityReference.get();
             if (activity == null || activity.isFinishing()) return;
 
             activity.binding.buttonLogin.setEnabled(true);
 
-            if (responseCode == 200) { // 200 OK
-                // Invece di andare  a InputActivity,
-                // vai alla nuova DashboardActivity
-                Toast.makeText(activity, "Login Avvenuto con successo!", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(activity, DashboardActivity.class);
-                // ✅ AGGIUNGI: Passa dati utente (per ora mock, poi useremo response JSON)
-                Utente mockUser = new Utente(1, "test@example.com", "Test", "User", 2);
-                intent.putExtra("USER_DATA", mockUser);
+            // ✅ NUOVO: Controlla se è un JSON (login OK) o un codice errore
+            if (result != null && result.startsWith("{")) {
+                // È un JSON response - login riuscito
+                try {
+                    // ✅ USA il metodo parseFromLoginResponse della classe Utente
+                    JSONObject fullResponse = new JSONObject(result);
+                    JSONObject userData = fullResponse.getJSONObject("user"); // ← Prendi solo questa parte!
+                    Utente user = Utente.parseFromLoginResponse(userData.toString());
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                activity.startActivity(intent);
-                activity.finish();
+                    Toast.makeText(activity, "Login Avvenuto con successo!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(activity, DashboardActivity.class);
+
+                    // ✅ PASSA l'utente REALE invece del mock
+                    intent.putExtra("USER_DATA", user);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    activity.startActivity(intent);
+                    activity.finish();
+
+                } catch (Exception e) {
+                    // Se parsing fallisce, fallback su utente mock
+                    e.printStackTrace();
+                    Toast.makeText(activity, "Login OK ma errore nel parsing dati utente", Toast.LENGTH_SHORT).show();
+
+                    // Fallback: crea utente mock normale
+                    Utente mockUser = new Utente(1, "test@example.com", "INTERMEDIO");
+                    Intent intent = new Intent(activity, DashboardActivity.class);
+                    intent.putExtra("USER_DATA", mockUser);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    activity.startActivity(intent);
+                    activity.finish();
+                }
+
             } else {
+                // È un codice di errore
                 Toast.makeText(activity, "Email o password non validi.", Toast.LENGTH_LONG).show();
             }
+        }
+
+        //Helper method per leggere response stream
+        private String leggiStream(InputStream in) throws IOException {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            return sb.toString();
         }
     }
 

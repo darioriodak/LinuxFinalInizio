@@ -14,7 +14,6 @@ public class Utente implements Parcelable {
     // Campi esperto
     private String areaEspertise;
     private int anniEsperienza;
-    private String certificazioni;
 
     //  utente normale
     public Utente(int id, String email, String livelloEsperienza) {
@@ -31,7 +30,7 @@ public class Utente implements Parcelable {
         this.isEsperto = true;
         this.areaEspertise = areaEspertise;
         this.anniEsperienza = anniEsperienza;
-        this.certificazioni = certificazioni;
+
     }
 
     protected Utente(Parcel in) {
@@ -41,7 +40,7 @@ public class Utente implements Parcelable {
         isEsperto = in.readByte() != 0;
         areaEspertise = in.readString();
         anniEsperienza = in.readInt();
-        certificazioni = in.readString();
+
     }
 
     public static final Creator<Utente> CREATOR = new Creator<Utente>() {
@@ -60,22 +59,23 @@ public class Utente implements Parcelable {
     public static Utente parseFromLoginResponse(String jsonString) throws JSONException {
         JSONObject json = new JSONObject(jsonString);
 
+        // Campi che IL SERVER EFFETTIVAMENTE RESTITUISCE
         int id = json.getInt("id");
         String email = json.getString("email");
-        String nome = json.getString("nome");
-        String cognome = json.getString("cognome");
         String livelloEsperienza = json.getString("livelloEsperienza");
 
-        if (json.has("areaEspertise")) {
-            // È un esperto
-            String areaEspertise = json.getString("areaEspertise");
-            int anniEsperienza = json.getInt("anniEsperienza");
-            String certificazioni = json.optString("certificazioni", "");
 
-            return new Utente(id, email, livelloEsperienza,
-                    areaEspertise, anniEsperienza);
+
+        if (json.has("isEsperto") && json.getBoolean("isEsperto") && json.has("profiloEsperto")) {
+            // È un esperto E ha il profilo esperto
+            JSONObject profiloEsperto = json.getJSONObject("profiloEsperto");
+
+            String areaEspertise = profiloEsperto.getString("specializzazione");
+            int anniEsperienza = profiloEsperto.getInt("anniEsperienza");
+
+            return new Utente(id, email, livelloEsperienza, areaEspertise, anniEsperienza);
         } else {
-            // È un utente normale
+            // È un utente normale (o esperto senza dati completi)
             return new Utente(id, email, livelloEsperienza);
         }
     }
@@ -91,7 +91,7 @@ public class Utente implements Parcelable {
         dest.writeByte((byte) (isEsperto ? 1 : 0));
         dest.writeString(areaEspertise);
         dest.writeInt(anniEsperienza);
-        dest.writeString(certificazioni);
+
     }
 
     // Getters
@@ -101,7 +101,7 @@ public class Utente implements Parcelable {
     public boolean isEsperto() { return isEsperto; }
     public String getAreaEspertise() { return areaEspertise; }
     public int getAnniEsperienza() { return anniEsperienza; }
-    public String getCertificazioni() { return certificazioni; }
+
 
 }
 

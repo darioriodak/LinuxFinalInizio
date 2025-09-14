@@ -13,10 +13,7 @@ public class RegistrazioneEspertoDTO {
     private String specializzazione;
     private int anniEsperienza;
     private String motivazione;
-    private String certificazioni;
-    private String linkedin;
-    private String github;
-    private String biografia;
+
 
     public RegistrazioneEspertoDTO(String email, String password, String nome, String cognome,
                                    String livelloEsperienza, String specializzazione, int anniEsperienza,
@@ -33,7 +30,7 @@ public class RegistrazioneEspertoDTO {
     }
 
     /**
-     * Serializza in JSON per invio al server - CORRISPONDE ESATTAMENTE AL TUO ESEMPIO
+     * Serializza in JSON per invio al server
      */
     public String toJSONString() throws JSONException {
         JSONObject json = new JSONObject();
