@@ -1,10 +1,716 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.CreaRichiestaActivity">
+    android:orientation="vertical"
+    >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Header con titolo e progress -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitoloStep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleziona Distribuzioni"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvDescrizioneStep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Quali distribuzioni Linux ti interessano?"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:alpha="0.9" />
+
+        <!-- Progress indicator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <View
+                android:id="@+id/progressStep1"
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:background="@android:color/white"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/progressStep2"
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:background="@android:color/white"
+                android:alpha="0.3"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/progressStep3"
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:background="@android:color/white"
+                android:alpha="0.3"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/progressStep4"
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:background="@android:color/white"
+                android:alpha="0.3" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvStepCounter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Step 1 di 4"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:alpha="0.8" />
+
+    </LinearLayout>
+
+    <!-- Content container per i diversi step -->
+    <FrameLayout
+        android:id="@+id/containerContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- STEP 1: Selezione Distribuzioni -->
+        <ScrollView
+            android:id="@+id/scrollStep1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Seleziona una o più distribuzioni che vorresti installare"
+                    android:textSize="16sp"
+
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Loading indicator per le distribuzioni -->
+                <ProgressBar
+                    android:id="@+id/progressBarDistribuzioni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+
+                <!-- RecyclerView per le distribuzioni -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewDistribuzioni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <!-- Messaggio di errore -->
+                <TextView
+                    android:id="@+id/tvErroreDistribuzioni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Errore nel caricamento delle distribuzioni"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:visibility="gone" />
+
+                <!-- Motivazione selezione -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="📝 Perché ti interessano?"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <EditText
+                    android:id="@+id/etMotivazioneDistro"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+
+                    android:padding="12dp"
+                    android:hint="Descrivi brevemente il tuo interesse per queste distribuzioni..."
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- STEP 2: Hardware -->
+        <ScrollView
+            android:id="@+id/scrollStep2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Specifica le caratteristiche hardware del tuo sistema"
+                    android:textSize="16sp"
+
+                    android:layout_marginBottom="16dp" />
+
+                <!-- CPU -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🖥️ Processore (CPU)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <EditText
+                    android:id="@+id/etCpu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+
+                    android:padding="12dp"
+                    android:hint="es. Intel i5-10400, AMD Ryzen 5 3600"
+                    android:inputType="text" />
+
+                <!-- RAM -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🧠 Memoria RAM"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <Spinner
+                    android:id="@+id/spinnerRam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+
+                    android:padding="12dp" />
+
+                <!-- Storage -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💾 Archiviazione"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerStorageType"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:layout_marginEnd="8dp" />
+
+                    <EditText
+                        android:id="@+id/etStorageSize"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:hint="Dimensione (GB)"
+                        android:inputType="number" />
+
+                </LinearLayout>
+
+                <!-- GPU -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🎮 Scheda Video"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupGpu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <RadioButton
+                        android:id="@+id/radioIntegrata"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Scheda video integrata"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioDedicata"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Scheda video dedicata"
+                        android:textSize="14sp" />
+
+                </RadioGroup>
+
+                <EditText
+                    android:id="@+id/etGpuDettagli"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="12dp"
+                    android:hint="Dettagli scheda video (opzionale)"
+                    android:inputType="text" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- STEP 3: Esperienza e Selezione Esperti -->
+        <ScrollView
+            android:id="@+id/scrollStep3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Valuta la tua esperienza con Linux e scegli gli esperti"
+                    android:textSize="16sp"
+
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Livello esperienza -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Livello di esperienza con Linux"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupEsperienza"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <RadioButton
+                        android:id="@+id/radioPrincipiante"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌱 Principiante - Prima volta con Linux"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioIntermedio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔧 Intermedio - Ho già usato Linux occasionalmente"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioAvanzato"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚡ Avanzato - Uso Linux regolarmente"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioEsperto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🎯 Esperto - Conosco bene Linux e le sue distribuzioni"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                </RadioGroup>
+
+                <!-- Uso previsto -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🎯 Come intendi utilizzare Linux?"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+
+                    android:layout_marginTop="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp">
+
+                    <CheckBox
+                        android:id="@+id/checkDesktop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Desktop uso quotidiano"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkSviluppo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sviluppo software"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkServer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Server / Hosting"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkGaming"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gaming"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkSicurezza"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sicurezza / Penetration testing"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkEducativo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Scopi educativi"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <!-- NUOVA SEZIONE: Selezione Esperti -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:layout_marginVertical="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="👥 Selezione Esperti"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Scegli come selezionare gli esperti che valuteranno la tua richiesta"
+                    android:textSize="14sp"
+
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Modalità selezione esperti -->
+                <RadioGroup
+                    android:id="@+id/radioGroupModalitaEsperti"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+
+                    <RadioButton
+                        android:id="@+id/radioAutomatica"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🤖 Selezione automatica - Assegna automaticamente gli esperti migliori"
+                        android:textSize="14sp"
+                        android:padding="8dp"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/radioManuale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="✋ Selezione manuale - Scegli tu gli esperti specifici"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                </RadioGroup>
+
+                <!-- Sezione esperti manuali (inizialmente nascosta) -->
+                <LinearLayout
+                    android:id="@+id/layoutEspertiManuali"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Seleziona fino a 3 esperti:"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Loading esperti -->
+                    <ProgressBar
+                        android:id="@+id/progressBarEsperti"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+
+                    <!-- RecyclerView esperti -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerEsperti"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="300dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <!-- Errore caricamento esperti -->
+                    <TextView
+                        android:id="@+id/tvErroreEsperti"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Errore nel caricamento degli esperti"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <!-- Note aggiuntive -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="📝 Note aggiuntive"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                     />
+
+                <EditText
+                    android:id="@+id/etNoteEsperienza"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+
+                    android:padding="12dp"
+                    android:hint="Aggiungi qualsiasi informazione che ritieni utile per la valutazione..."
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- STEP 4: Riepilogo -->
+        <ScrollView
+            android:id="@+id/scrollStep4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Verifica i dati inseriti prima di inviare la richiesta"
+                    android:textSize="16sp"
+
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Card riepilogo -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="📋 Riepilogo Richiesta"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- Sezione distribuzioni -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="🐧 Distribuzioni selezionate:"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvRiepilogoDistro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ubuntu, Fedora"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- Sezione hardware -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="🖥️ Hardware:"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvRiepilogoHardware"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CPU: Intel i5-10400\nRAM: 16GB\nStorage: SSD 512GB"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- Sezione esperienza -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="📊 Esperienza:"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvRiepilogoEsperienza"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Livello: Intermedio\nUso: Desktop, Sviluppo"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="12dp" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Checkbox consenso -->
+                <CheckBox
+                    android:id="@+id/checkConsenso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Confermo che le informazioni fornite sono corrette e accetto che vengano condivise con gli esperti per la valutazione"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
+    <!-- Bottom navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnIndietro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Indietro"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnAvanti"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Avanti"
+
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp" />
+
+        <Button
+            android:id="@+id/btnInvia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Invia Richiesta"
+
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

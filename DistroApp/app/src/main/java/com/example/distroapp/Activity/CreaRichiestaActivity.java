@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.distroapp.Entity.Utente;
 import com.example.distroapp.Entity.DistroSummaryDTO;
 import com.example.distroapp.Entity.EspertoSelezionatoDTO;
+import com.example.distroapp.Adapter.DistroSummaryAdapter;
+import com.example.distroapp.Adapter.EspertiAdapter;
 import com.example.distroapp.R;
 
 import org.json.JSONArray;
@@ -34,37 +36,38 @@ import java.util.List;
 public class CreaRichiestaActivity extends AppCompatActivity {
 
     // ===== COMPONENTI UI =====
-    private ViewFlipper viewFlipper;
-    private Button btnNext, btnPrev, btnFinish;
-    private TextView tvStepIndicator, tvStepTitle;
-    private ProgressBar progressBar;
+    private TextView tvTitoloStep, tvDescrizioneStep, tvStepCounter;
+    private View[] progressSteps = new View[4];
+    private ScrollView[] stepScrollViews = new ScrollView[4];
+    private Button btnIndietro, btnAvanti, btnInvia;
 
     // Step 1: Selezione Distribuzioni
-    private TextView tvStepDescription;
-    private RecyclerView recyclerDistroSummary;
+    private RecyclerView recyclerViewDistribuzioni;
+    private ProgressBar progressBarDistribuzioni;
+    private TextView tvErroreDistribuzioni;
+    private EditText etMotivazioneDistro;
     private DistroSummaryAdapter distroSummaryAdapter;
     private List<DistroSummaryDTO> distribuzioniDisponibili = new ArrayList<>();
     private List<DistroSummaryDTO> distribuzioniSelezionate = new ArrayList<>();
 
-    // Step 2: Hardware Opzionale + Note
-    private CheckBox cbAggiungiHardware;
-    private LinearLayout layoutHardware;
-    private EditText etCpu, etRam, etSpazio, etSchedaVideo, etNoteAggiuntive;
-    private Spinner spinnerTipoSistema;
+    // Step 2: Hardware
+    private EditText etCpu, etStorageSize, etGpuDettagli;
+    private Spinner spinnerRam, spinnerStorageType;
+    private RadioGroup radioGroupGpu;
 
-    // Step 3: Selezione Esperti + Conferma
-    private RadioGroup radioGroupModalita;
-    private LinearLayout layoutEspertiManuali;
-    private RecyclerView recyclerEsperti;
-    private EspertiAdapter espertiAdapter;
-    private List<EspertoSelezionatoDTO> espertiDisponibili = new ArrayList<>();
-    private List<EspertoSelezionatoDTO> espertiSelezionati = new ArrayList<>();
-    private TextView tvRiepilogoFinale;
+    // Step 3: Esperienza
+    private RadioGroup radioGroupEsperienza;
+    private CheckBox checkDesktop, checkSviluppo, checkServer, checkGaming, checkSicurezza, checkEducativo;
+    private EditText etNoteEsperienza;
+
+    // Step 4: Riepilogo
+    private TextView tvRiepilogoDistro, tvRiepilogoHardware, tvRiepilogoEsperienza;
+    private CheckBox checkConsenso;
 
     // ===== DATI E STATO =====
     private Utente currentUser;
-    private int currentStep = 0;
-    private final int TOTAL_STEPS = 3;
+    private int currentStep = 1;
+    private final int TOTAL_STEPS = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,233 +82,213 @@ public class CreaRichiestaActivity extends AppCompatActivity {
         }
 
         initViews();
-        setupViewFlipper();
-        setupClickListeners();
-        setupStep1();
+        setupStepNavigation();
+        setupSpinners();
 
         // Carica distribuzioni summary
         new LoadDistroSummaryTask(this).execute();
+
+        // Mostra primo step
+        showStep(1);
     }
 
     private void initViews() {
-        // Controlli navigazione
-        viewFlipper = findViewById(R.id.viewFlipper);
-        btnNext = findViewById(R.id.btnNext);
-        btnPrev = findViewById(R.id.btnPrev);
-        btnFinish = findViewById(R.id.btnFinish);
-        tvStepIndicator = findViewById(R.id.tvStepIndicator);
-        tvStepTitle = findViewById(R.id.tvStepTitle);
-        progressBar = findViewById(R.id.progressBar);
+        // Header components
+        tvTitoloStep = findViewById(R.id.tvTitoloStep);
+        tvDescrizioneStep = findViewById(R.id.tvDescrizioneStep);
+        tvStepCounter = findViewById(R.id.tvStepCounter);
 
-        // Step 1 - Distribuzioni Summary
-        tvStepDescription = findViewById(R.id.tvStepDescription);
-        recyclerDistroSummary = findViewById(R.id.recyclerDistroSummary);
+        // Progress indicators
+        progressSteps[0] = findViewById(R.id.progressStep1);
+        progressSteps[1] = findViewById(R.id.progressStep2);
+        progressSteps[2] = findViewById(R.id.progressStep3);
+        progressSteps[3] = findViewById(R.id.progressStep4);
 
-        // Step 2 - Hardware
-        cbAggiungiHardware = findViewById(R.id.cbAggiungiHardware);
-        layoutHardware = findViewById(R.id.layoutHardware);
+        // Step containers
+        stepScrollViews[0] = findViewById(R.id.scrollStep1);
+        stepScrollViews[1] = findViewById(R.id.scrollStep2);
+        stepScrollViews[2] = findViewById(R.id.scrollStep3);
+        stepScrollViews[3] = findViewById(R.id.scrollStep4);
+
+        // Navigation buttons
+        btnIndietro = findViewById(R.id.btnIndietro);
+        btnAvanti = findViewById(R.id.btnAvanti);
+        btnInvia = findViewById(R.id.btnInvia);
+
+        // Step 1 components
+        recyclerViewDistribuzioni = findViewById(R.id.recyclerViewDistribuzioni);
+        progressBarDistribuzioni = findViewById(R.id.progressBarDistribuzioni);
+        tvErroreDistribuzioni = findViewById(R.id.tvErroreDistribuzioni);
+        etMotivazioneDistro = findViewById(R.id.etMotivazioneDistro);
+
+        // Step 2 components
         etCpu = findViewById(R.id.etCpu);
-        etRam = findViewById(R.id.etRam);
-        etSpazio = findViewById(R.id.etSpazio);
-        etSchedaVideo = findViewById(R.id.etSchedaVideo);
-        spinnerTipoSistema = findViewById(R.id.spinnerTipoSistema);
-        etNoteAggiuntive = findViewById(R.id.etNoteAggiuntive);
+        etStorageSize = findViewById(R.id.etStorageSize);
+        etGpuDettagli = findViewById(R.id.etGpuDettagli);
+        spinnerRam = findViewById(R.id.spinnerRam);
+        spinnerStorageType = findViewById(R.id.spinnerStorageType);
+        radioGroupGpu = findViewById(R.id.radioGroupGpu);
 
-        // Step 3 - Esperti
-        radioGroupModalita = findViewById(R.id.radioGroupModalita);
-        layoutEspertiManuali = findViewById(R.id.layoutEspertiManuali);
-        recyclerEsperti = findViewById(R.id.recyclerEsperti);
-        tvRiepilogoFinale = findViewById(R.id.tvRiepilogoFinale);
+        // Step 3 components
+        radioGroupEsperienza = findViewById(R.id.radioGroupEsperienza);
+        checkDesktop = findViewById(R.id.checkDesktop);
+        checkSviluppo = findViewById(R.id.checkSviluppo);
+        checkServer = findViewById(R.id.checkServer);
+        checkGaming = findViewById(R.id.checkGaming);
+        checkSicurezza = findViewById(R.id.checkSicurezza);
+        checkEducativo = findViewById(R.id.checkEducativo);
+        etNoteEsperienza = findViewById(R.id.etNoteEsperienza);
+
+        // Step 4 components
+        tvRiepilogoDistro = findViewById(R.id.tvRiepilogoDistro);
+        tvRiepilogoHardware = findViewById(R.id.tvRiepilogoHardware);
+        tvRiepilogoEsperienza = findViewById(R.id.tvRiepilogoEsperienza);
+        checkConsenso = findViewById(R.id.checkConsenso);
     }
 
-    private void setupViewFlipper() {
-        updateStepIndicator();
-        updateNavigationButtons();
-    }
-
-    private void setupClickListeners() {
-        btnNext.setOnClickListener(v -> {
+    private void setupStepNavigation() {
+        btnAvanti.setOnClickListener(v -> {
             if (validateCurrentStep()) {
-                nextStep();
+                if (currentStep < TOTAL_STEPS) {
+                    showStep(currentStep + 1);
+                }
             }
         });
 
-        btnPrev.setOnClickListener(v -> previousStep());
+        btnIndietro.setOnClickListener(v -> {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        });
 
-        btnFinish.setOnClickListener(v -> {
+        btnInvia.setOnClickListener(v -> {
             if (validateCurrentStep()) {
                 inviaRichiesta();
             }
         });
-
-        // Checkbox hardware
-        cbAggiungiHardware.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            layoutHardware.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
-
-        // Gestione modalità selezione esperti
-        radioGroupModalita.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radioManuale) {
-                layoutEspertiManuali.setVisibility(View.VISIBLE);
-                if (espertiDisponibili.isEmpty()) {
-                    new LoadEspertiTask(this).execute();
-                }
-            } else {
-                layoutEspertiManuali.setVisibility(View.GONE);
-            }
-        });
     }
 
-    private void setupStep1() {
-        tvStepTitle.setText("Scegli le Distribuzioni");
-        tvStepDescription.setText("Seleziona una o più distribuzioni Linux che ti interessano");
+    private void setupSpinners() {
+        // Spinner RAM
+        String[] ramOptions = {"2GB", "4GB", "8GB", "16GB", "32GB", "64GB", "128GB"};
+        ArrayAdapter<String> ramAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ramOptions);
+        ramAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRam.setAdapter(ramAdapter);
+        spinnerRam.setSelection(2); // Default 8GB
+
+        // Spinner Storage Type
+        String[] storageTypes = {"SSD", "HDD", "NVMe SSD", "Ibrido (SSHD)"};
+        ArrayAdapter<String> storageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, storageTypes);
+        storageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStorageType.setAdapter(storageAdapter);
     }
 
-    // ===== NAVIGAZIONE STEPS =====
+    // ===== GESTIONE STEP =====
+    private void showStep(int stepNumber) {
+        currentStep = stepNumber;
 
-    private void nextStep() {
-        if (currentStep < TOTAL_STEPS - 1) {
-            currentStep++;
-            viewFlipper.setDisplayedChild(currentStep);
-            updateStepIndicator();
-            updateNavigationButtons();
-
-            // Setup specifico per ogni step
-            switch (currentStep) {
-                case 1:
-                    setupStep2();
-                    break;
-                case 2:
-                    setupStep3();
-                    break;
+        // Nascondi tutti gli step
+        for (ScrollView scrollView : stepScrollViews) {
+            if (scrollView != null) {
+                scrollView.setVisibility(View.GONE);
             }
         }
-    }
 
-    private void previousStep() {
-        if (currentStep > 0) {
-            currentStep--;
-            viewFlipper.setDisplayedChild(currentStep);
-            updateStepIndicator();
-            updateNavigationButtons();
+        // Mostra lo step corrente
+        if (stepScrollViews[currentStep - 1] != null) {
+            stepScrollViews[currentStep - 1].setVisibility(View.VISIBLE);
         }
+
+        // Aggiorna UI
+        updateStepIndicator();
+        updateNavigationButtons();
+        updateStepContent();
     }
 
     private void updateStepIndicator() {
-        String[] stepTitles = {
-                "Distribuzioni",
-                "Hardware & Note",
-                "Esperti & Conferma"
+        // Aggiorna il contatore step
+        tvStepCounter.setText("Step " + currentStep + " di " + TOTAL_STEPS);
+
+        // Aggiorna progress indicator
+        for (int i = 0; i < progressSteps.length; i++) {
+            if (i < currentStep) {
+                progressSteps[i].setAlpha(1.0f);
+            } else {
+                progressSteps[i].setAlpha(0.3f);
+            }
+        }
+
+        // Aggiorna titoli
+        String[] titoli = {
+                "Seleziona Distribuzioni",
+                "Specifiche Hardware",
+                "Esperienza e Esperti",
+                "Riepilogo e Conferma"
         };
 
-        tvStepIndicator.setText("Step " + (currentStep + 1) + " di " + TOTAL_STEPS);
-        tvStepTitle.setText(stepTitles[currentStep]);
-        progressBar.setProgress((int) (((float) (currentStep + 1) / TOTAL_STEPS) * 100));
+        String[] descrizioni = {
+                "Quali distribuzioni Linux ti interessano?",
+                "Dettagli del tuo sistema (opzionale)",
+                "Il tuo livello, uso previsto e selezione esperti",
+                "Verifica i dati prima di inviare"
+        };
+
+        if (currentStep <= titoli.length) {
+            tvTitoloStep.setText(titoli[currentStep - 1]);
+            tvDescrizioneStep.setText(descrizioni[currentStep - 1]);
+        }
     }
 
     private void updateNavigationButtons() {
-        btnPrev.setVisibility(currentStep > 0 ? View.VISIBLE : View.GONE);
-
-        if (currentStep == TOTAL_STEPS - 1) {
-            btnNext.setVisibility(View.GONE);
-            btnFinish.setVisibility(View.VISIBLE);
+        // Pulsante Indietro
+        if (currentStep > 1) {
+            btnIndietro.setVisibility(View.VISIBLE);
         } else {
-            btnNext.setVisibility(View.VISIBLE);
-            btnFinish.setVisibility(View.GONE);
+            btnIndietro.setVisibility(View.GONE);
+        }
+
+        // Pulsanti Avanti/Invia
+        if (currentStep < TOTAL_STEPS) {
+            btnAvanti.setVisibility(View.VISIBLE);
+            btnInvia.setVisibility(View.GONE);
+        } else {
+            btnAvanti.setVisibility(View.GONE);
+            btnInvia.setVisibility(View.VISIBLE);
         }
     }
 
-    // ===== SETUP STEPS SPECIFICI =====
+    private void updateStepContent() {
+        switch (currentStep) {
+            case 1:
+                // Step distribuzioni - già gestito nel LoadDistroSummaryTask
+                break;
 
-    private void setupStep2() {
-        tvStepDescription.setText("Aggiungi informazioni sul tuo hardware per consigli più personalizzati (opzionale)");
+            case 2:
+                // Step hardware - niente di speciale
+                break;
 
-        // Pre-compila alcuni campi se possibile
-        // Qui potresti usare dati salvati o rilevamento automatico
-    }
+            case 3:
+                // Step esperienza - niente di speciale
+                break;
 
-    private void setupStep3() {
-        tvStepDescription.setText("Scegli come selezionare gli esperti che valuteranno la tua richiesta");
-
-        // Setup RecyclerView esperti se modalità manuale
-        if (recyclerEsperti.getAdapter() == null && !espertiDisponibili.isEmpty()) {
-            espertiAdapter = new EspertiAdapter(espertiDisponibili, esperti -> {
-                espertiSelezionati.clear();
-                espertiSelezionati.addAll(esperti);
+            case 4:
+                // Step riepilogo
                 updateRiepilogoFinale();
-            });
-            recyclerEsperti.setLayoutManager(new LinearLayoutManager(this));
-            recyclerEsperti.setAdapter(espertiAdapter);
+                break;
         }
-
-        updateRiepilogoFinale();
-    }
-
-    private void updateRiepilogoFinale() {
-        StringBuilder riepilogo = new StringBuilder();
-        riepilogo.append("🎯 RIEPILOGO RICHIESTA\n\n");
-
-        // Distribuzioni selezionate
-        riepilogo.append("💻 Distribuzioni selezionate (").append(distribuzioniSelezionate.size()).append("):\n");
-        for (DistroSummaryDTO distro : distribuzioniSelezionate) {
-            riepilogo.append("• ").append(distro.getNomeDisplay());
-            if (distro.getLivelloDifficolta() != null) {
-                riepilogo.append(" (").append(distro.getLivelloDifficolta()).append(")");
-            }
-            riepilogo.append("\n");
-        }
-        riepilogo.append("\n");
-
-        // Hardware
-        if (cbAggiungiHardware.isChecked()) {
-            riepilogo.append("🔧 Hardware specificato:\n");
-            if (!etCpu.getText().toString().trim().isEmpty()) {
-                riepilogo.append("• CPU: ").append(etCpu.getText().toString().trim()).append("\n");
-            }
-            if (!etRam.getText().toString().trim().isEmpty()) {
-                riepilogo.append("• RAM: ").append(etRam.getText().toString().trim()).append("\n");
-            }
-            if (!etSpazio.getText().toString().trim().isEmpty()) {
-                riepilogo.append("• Spazio: ").append(etSpazio.getText().toString().trim()).append("\n");
-            }
-            riepilogo.append("\n");
-        } else {
-            riepilogo.append("🔧 Hardware: Non specificato\n\n");
-        }
-
-        // Modalità esperti
-        riepilogo.append("👥 Selezione esperti: ");
-        int checkedId = radioGroupModalita.getCheckedRadioButtonId();
-        if (checkedId == R.id.radioAutomatica) {
-            riepilogo.append("Automatica (tutti gli esperti disponibili)\n");
-        } else if (checkedId == R.id.radioManuale) {
-            riepilogo.append("Manuale (").append(espertiSelezionati.size()).append(" esperti scelti)\n");
-            for (EspertoSelezionatoDTO esperto : espertiSelezionati) {
-                riepilogo.append("  • ").append(esperto.getNome()).append(" - ").append(esperto.getSpecializzazione()).append("\n");
-            }
-        } else {
-            riepilogo.append("Da selezionare\n");
-        }
-
-        // Note
-        String note = etNoteAggiuntive.getText().toString().trim();
-        if (!note.isEmpty()) {
-            riepilogo.append("\n📝 Note: ").append(note);
-        }
-
-        tvRiepilogoFinale.setText(riepilogo.toString());
     }
 
     // ===== VALIDAZIONI =====
-
     private boolean validateCurrentStep() {
         switch (currentStep) {
-            case 0:
-                return validateStep1();
             case 1:
-                return validateStep2();
+                return validateStep1();
             case 2:
+                return validateStep2();
+            case 3:
                 return validateStep3();
+            case 4:
+                return validateStep4();
             default:
                 return true;
         }
@@ -327,55 +310,122 @@ public class CreaRichiestaActivity extends AppCompatActivity {
 
     private boolean validateStep2() {
         // Validazioni hardware opzionali
-        if (cbAggiungiHardware.isChecked()) {
-            String ram = etRam.getText().toString().trim();
-            if (!ram.isEmpty()) {
-                try {
-                    int ramValue = Integer.parseInt(ram);
-                    if (ramValue < 1 || ramValue > 128) {
-                        etRam.setError("RAM deve essere tra 1 e 128 GB");
-                        return false;
-                    }
-                } catch (NumberFormatException e) {
-                    etRam.setError("Inserisci un numero valido per la RAM");
+        String storageSize = etStorageSize.getText().toString().trim();
+        if (!storageSize.isEmpty()) {
+            try {
+                int size = Integer.parseInt(storageSize);
+                if (size < 1 || size > 10000) {
+                    etStorageSize.setError("Dimensione deve essere tra 1 e 10000 GB");
                     return false;
                 }
-            }
-
-            String spazio = etSpazio.getText().toString().trim();
-            if (!spazio.isEmpty()) {
-                try {
-                    int spazioValue = Integer.parseInt(spazio);
-                    if (spazioValue < 1 || spazioValue > 3000) {
-                        etSpazio.setError("Spazio deve essere tra 1 e 3000 GB");
-                        return false;
-                    }
-                } catch (NumberFormatException e) {
-                    etSpazio.setError("Inserisci un numero valido per lo spazio");
-                    return false;
-                }
+            } catch (NumberFormatException e) {
+                etStorageSize.setError("Inserisci un numero valido");
+                return false;
             }
         }
+
         return true;
     }
 
     private boolean validateStep3() {
-        int checkedId = radioGroupModalita.getCheckedRadioButtonId();
-        if (checkedId == -1) {
-            Toast.makeText(this, "Seleziona una modalità di selezione esperti", Toast.LENGTH_SHORT).show();
+        // Controlla che sia selezionato un livello di esperienza
+        if (radioGroupEsperienza.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this, "Seleziona il tuo livello di esperienza con Linux", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (checkedId == R.id.radioManuale && espertiSelezionati.isEmpty()) {
-            Toast.makeText(this, "Seleziona almeno un esperto per la modalità manuale", Toast.LENGTH_SHORT).show();
+        // Controlla che sia selezionato almeno un uso previsto
+        if (!checkDesktop.isChecked() && !checkSviluppo.isChecked() &&
+                !checkServer.isChecked() && !checkGaming.isChecked() &&
+                !checkSicurezza.isChecked() && !checkEducativo.isChecked()) {
+            Toast.makeText(this, "Seleziona almeno un uso previsto per Linux", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         return true;
+    }
+
+    private boolean validateStep4() {
+        // Controlla che sia accettato il consenso
+        if (!checkConsenso.isChecked()) {
+            Toast.makeText(this, "Devi accettare la condivisione delle informazioni per procedere", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    // ===== AGGIORNAMENTO RIEPILOGO =====
+    private void updateRiepilogoFinale() {
+        // Distribuzioni
+        StringBuilder distroText = new StringBuilder();
+        for (int i = 0; i < distribuzioniSelezionate.size(); i++) {
+            if (i > 0) distroText.append(", ");
+            distroText.append(distribuzioniSelezionate.get(i).getNomeDisplay());
+        }
+        tvRiepilogoDistro.setText(distroText.toString());
+
+        // Hardware
+        StringBuilder hwText = new StringBuilder();
+        String cpu = etCpu.getText().toString().trim();
+        if (!cpu.isEmpty()) {
+            hwText.append("CPU: ").append(cpu).append("\n");
+        }
+
+        String ram = spinnerRam.getSelectedItem().toString();
+        hwText.append("RAM: ").append(ram).append("\n");
+
+        String storageSize = etStorageSize.getText().toString().trim();
+        String storageType = spinnerStorageType.getSelectedItem().toString();
+        if (!storageSize.isEmpty()) {
+            hwText.append("Storage: ").append(storageType).append(" ").append(storageSize).append("GB\n");
+        }
+
+        int selectedGpuId = radioGroupGpu.getCheckedRadioButtonId();
+        if (selectedGpuId != -1) {
+            RadioButton selectedGpu = findViewById(selectedGpuId);
+            hwText.append("GPU: ").append(selectedGpu.getText());
+
+            String gpuDetails = etGpuDettagli.getText().toString().trim();
+            if (!gpuDetails.isEmpty()) {
+                hwText.append(" (").append(gpuDetails).append(")");
+            }
+        }
+
+        tvRiepilogoHardware.setText(hwText.toString());
+
+        // Esperienza
+        StringBuilder expText = new StringBuilder();
+        int selectedExpId = radioGroupEsperienza.getCheckedRadioButtonId();
+        if (selectedExpId != -1) {
+            RadioButton selectedExp = findViewById(selectedExpId);
+            String expLevel = selectedExp.getText().toString();
+            // Rimuovi emoji per il riepilogo
+            expLevel = expLevel.replaceAll("[🌱🔧⚡🎯]", "").trim();
+            expText.append("Livello: ").append(expLevel).append("\n");
+        }
+
+        // Usi previsti
+        List<String> usi = new ArrayList<>();
+        if (checkDesktop.isChecked()) usi.add("Desktop");
+        if (checkSviluppo.isChecked()) usi.add("Sviluppo");
+        if (checkServer.isChecked()) usi.add("Server");
+        if (checkGaming.isChecked()) usi.add("Gaming");
+        if (checkSicurezza.isChecked()) usi.add("Sicurezza");
+        if (checkEducativo.isChecked()) usi.add("Educativo");
+
+        if (!usi.isEmpty()) {
+            expText.append("Uso: ");
+            for (int i = 0; i < usi.size(); i++) {
+                if (i > 0) expText.append(", ");
+                expText.append(usi.get(i));
+            }
+        }
+
+        tvRiepilogoEsperienza.setText(expText.toString());
     }
 
     // ===== INVIO RICHIESTA =====
-
     private void inviaRichiesta() {
         try {
             JSONObject richiestaJson = creaJSONRichiesta();
@@ -393,10 +443,8 @@ public class CreaRichiestaActivity extends AppCompatActivity {
         json.put("livelloEsperienza", currentUser.getLivelloEsperienza());
         json.put("scopoUso", currentUser.isEsperto() ? "Consulenza tecnica" : currentUser.getLivelloEsperienza());
 
-        // Modalità selezione
-        int checkedId = radioGroupModalita.getCheckedRadioButtonId();
-        String modalita = (checkedId == R.id.radioAutomatica) ? "AUTOMATICA" : "MANUALE";
-        json.put("modalitaSelezione", modalita);
+        // Modalità selezione (sempre automatica per ora)
+        json.put("modalitaSelezione", "AUTOMATICA");
 
         // Distribuzioni candidate (da DistroSummary)
         JSONArray distribuzioniArray = new JSONArray();
@@ -408,40 +456,59 @@ public class CreaRichiestaActivity extends AppCompatActivity {
         }
         json.put("distribuzioniCandidate", distribuzioniArray);
 
-        // Esperti (se modalità manuale)
-        if ("MANUALE".equals(modalita)) {
-            JSONArray espertiArray = new JSONArray();
-            for (EspertoSelezionatoDTO esperto : espertiSelezionati) {
-                JSONObject espertoJson = new JSONObject();
-                espertoJson.put("id", esperto.getId());
-                espertoJson.put("nome", esperto.getNome());
-                espertoJson.put("specializzazione", esperto.getSpecializzazione());
-                espertoJson.put("anniEsperienza", esperto.getAnniEsperienza());
-                espertoJson.put("feedbackMedio", esperto.getFeedbackMedio());
-                espertiArray.put(espertoJson);
-            }
-            json.put("espertiSelezionati", espertiArray);
-        } else {
-            json.put("espertiSelezionati", new JSONArray());
-        }
+        // Esperti (sempre array vuoto per modalità automatica)
+        json.put("espertiSelezionati", new JSONArray());
 
         // Hardware opzionale
-        if (cbAggiungiHardware.isChecked()) {
-            String cpu = etCpu.getText().toString().trim();
-            String ram = etRam.getText().toString().trim();
-            String spazio = etSpazio.getText().toString().trim();
-            String schedaVideo = etSchedaVideo.getText().toString().trim();
-            String tipoSistema = spinnerTipoSistema.getSelectedItem().toString();
+        String cpu = etCpu.getText().toString().trim();
+        if (!cpu.isEmpty()) json.put("cpu", cpu);
 
-            if (!cpu.isEmpty()) json.put("cpu", cpu);
-            if (!ram.isEmpty()) json.put("ram", ram + " GB");
-            if (!spazio.isEmpty()) json.put("spazioArchiviazione", spazio + " GB");
-            if (!schedaVideo.isEmpty()) json.put("schedaVideo", schedaVideo);
-            if (!"Seleziona...".equals(tipoSistema)) json.put("tipoSistema", tipoSistema);
+        String ram = spinnerRam.getSelectedItem().toString();
+        json.put("ram", ram);
+
+        String storageSize = etStorageSize.getText().toString().trim();
+        if (!storageSize.isEmpty()) {
+            json.put("spazioArchiviazione", storageSize + " GB");
+            json.put("tipoStorage", spinnerStorageType.getSelectedItem().toString());
         }
 
-        // Note aggiuntive
-        String note = etNoteAggiuntive.getText().toString().trim();
+        int selectedGpuId = radioGroupGpu.getCheckedRadioButtonId();
+        if (selectedGpuId != -1) {
+            RadioButton selectedGpu = findViewById(selectedGpuId);
+            json.put("gpu", selectedGpu.getText().toString());
+
+            String gpuDetails = etGpuDettagli.getText().toString().trim();
+            if (!gpuDetails.isEmpty()) {
+                json.put("gpuDettagli", gpuDetails);
+            }
+        }
+
+        // Esperienza Linux
+        int selectedExpId = radioGroupEsperienza.getCheckedRadioButtonId();
+        if (selectedExpId != -1) {
+            RadioButton selectedExp = findViewById(selectedExpId);
+            String expLevel = selectedExp.getText().toString();
+            expLevel = expLevel.replaceAll("[🌱🔧⚡🎯]", "").trim();
+            json.put("livelloEsperienzaLinux", expLevel);
+        }
+
+        // Usi previsti
+        JSONArray usiArray = new JSONArray();
+        if (checkDesktop.isChecked()) usiArray.put("Desktop uso quotidiano");
+        if (checkSviluppo.isChecked()) usiArray.put("Sviluppo software");
+        if (checkServer.isChecked()) usiArray.put("Server / Hosting");
+        if (checkGaming.isChecked()) usiArray.put("Gaming");
+        if (checkSicurezza.isChecked()) usiArray.put("Sicurezza / Penetration testing");
+        if (checkEducativo.isChecked()) usiArray.put("Scopi educativi");
+        json.put("usiPrevisti", usiArray);
+
+        // Motivazione e note
+        String motivazione = etMotivazioneDistro.getText().toString().trim();
+        if (!motivazione.isEmpty()) {
+            json.put("motivazioneDistro", motivazione);
+        }
+
+        String note = etNoteEsperienza.getText().toString().trim();
         if (!note.isEmpty()) {
             json.put("noteAggiuntive", note);
         }
@@ -450,7 +517,6 @@ public class CreaRichiestaActivity extends AppCompatActivity {
     }
 
     // ===== NETWORK TASKS =====
-
     private static class LoadDistroSummaryTask extends AsyncTask<Void, Void, String> {
         private WeakReference<CreaRichiestaActivity> activityRef;
 
@@ -462,8 +528,8 @@ public class CreaRichiestaActivity extends AppCompatActivity {
         protected void onPreExecute() {
             CreaRichiestaActivity activity = activityRef.get();
             if (activity != null) {
-                // Mostra loading se necessario
-                activity.findViewById(R.id.progressLoadingDistro).setVisibility(View.VISIBLE);
+                activity.progressBarDistribuzioni.setVisibility(View.VISIBLE);
+                activity.recyclerViewDistribuzioni.setVisibility(View.GONE);
             }
         }
 
@@ -492,7 +558,7 @@ public class CreaRichiestaActivity extends AppCompatActivity {
             if (activity == null) return;
 
             // Nascondi loading
-            activity.findViewById(R.id.progressLoadingDistro).setVisibility(View.GONE);
+            activity.progressBarDistribuzioni.setVisibility(View.GONE);
 
             if (result != null) {
                 try {
@@ -520,13 +586,15 @@ public class CreaRichiestaActivity extends AppCompatActivity {
 
                         // Setup RecyclerView con layout a griglia per le card
                         activity.setupDistroSummaryRecyclerView();
+                        activity.recyclerViewDistribuzioni.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(activity, "Errore nel caricamento distribuzioni", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(activity, "Impossibile caricare le distribuzioni", Toast.LENGTH_SHORT).show();
+                activity.tvErroreDistribuzioni.setVisibility(View.VISIBLE);
+                activity.tvErroreDistribuzioni.setText("Impossibile caricare le distribuzioni");
             }
         }
 
@@ -553,10 +621,108 @@ public class CreaRichiestaActivity extends AppCompatActivity {
 
         // Layout a griglia per mostrare le card delle distribuzioni
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        recyclerDistroSummary.setLayoutManager(gridLayoutManager);
-        recyclerDistroSummary.setAdapter(distroSummaryAdapter);
+        recyclerViewDistribuzioni.setLayoutManager(gridLayoutManager);
+        recyclerViewDistribuzioni.setAdapter(distroSummaryAdapter);
     }
 
-    // TODO: Implementare LoadEspertiTask e InviaRichiestaTask
-    // TODO: Implementare DistroSummaryAdapter e EspertiAdapter
+    private static class InviaRichiestaTask extends AsyncTask<String, Void, String> {
+        private WeakReference<CreaRichiestaActivity> activityRef;
+
+        InviaRichiestaTask(CreaRichiestaActivity activity) {
+            activityRef = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            CreaRichiestaActivity activity = activityRef.get();
+            if (activity != null) {
+                // Disabilita il pulsante di invio e mostra loading
+                activity.btnInvia.setEnabled(false);
+                activity.btnInvia.setText("Invio in corso...");
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String jsonRichiesta = params[0];
+
+            try {
+                URL url = new URL("http://10.0.2.2:8080/LinuxFinal/RichiesteServlet/crea");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json; utf-8");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
+                connection.setConnectTimeout(15000);
+                connection.setReadTimeout(15000);
+
+                // Scrivi il JSON nella richiesta
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonRichiesta.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
+                    return readStream(connection.getInputStream());
+                } else {
+                    return "ERROR:" + responseCode;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            CreaRichiestaActivity activity = activityRef.get();
+            if (activity == null) return;
+
+            // Riabilita il pulsante
+            activity.btnInvia.setEnabled(true);
+            activity.btnInvia.setText("Invia Richiesta");
+
+            if (result != null && !result.startsWith("ERROR:")) {
+                try {
+                    JSONObject response = new JSONObject(result);
+                    if (response.getBoolean("success")) {
+                        // Richiesta inviata con successo
+                        Toast.makeText(activity, "Richiesta inviata con successo!", Toast.LENGTH_LONG).show();
+
+                        // Torna al dashboard
+                        Intent intent = new Intent(activity, DashboardActivity.class);
+                        intent.putExtra("USER_DATA", activity.currentUser);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(intent);
+                        activity.finish();
+
+                    } else {
+                        String errore = response.optString("message", "Errore sconosciuto");
+                        Toast.makeText(activity, "Errore: " + errore, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity, "Errore nel parsing della risposta", Toast.LENGTH_SHORT).show();
+                }
+            } else if (result != null && result.startsWith("ERROR:")) {
+                String errorCode = result.substring(6);
+                Toast.makeText(activity, "Errore del server: " + errorCode, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Errore di connessione", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        private String readStream(InputStream inputStream) throws IOException {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            reader.close();
+            return result.toString();
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.distroapp;
+package com.example.distroapp.Adapter;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.distroapp.Entity.Distro;
+import com.example.distroapp.R;
 
 import java.util.List;
 

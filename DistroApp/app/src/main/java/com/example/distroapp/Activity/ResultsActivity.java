@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.distroapp.Entity.Distro;
-import com.example.distroapp.DistroAdapter;
+import com.example.distroapp.Adapter.DistroAdapter;
 import com.example.distroapp.R;
 
 import java.util.ArrayList;
