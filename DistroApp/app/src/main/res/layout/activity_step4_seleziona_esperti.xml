@@ -1,125 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#F5F5F5">
+    android:fillViewport="true"
+    android:background="@color/background_light">
 
-    <!-- Header Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/card_background"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_step_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Step 4 di 5"
-            android:textSize="12sp"
-            android:textColor="#666666"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/tv_titolo_step"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Selezione Esperti"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/tv_descrizione_step"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scegli come selezionare gli esperti per la tua consulenza"
-            android:textSize="14sp"
-            android:textColor="#666666" />
-
-    </LinearLayout>
-
-    <!-- Progress Indicator -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="24dp"
-        android:gravity="center">
-
-        <View
-            android:id="@+id/progress_step_1"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/step_completed" />
-
-        <View
-            android:id="@+id/progress_step_2"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/step_completed" />
-
-        <View
-            android:id="@+id/progress_step_3"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/step_completed" />
-
-        <View
-            android:id="@+id/progress_step_4"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/step_active" />
-
-        <View
-            android:id="@+id/progress_step_5"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_weight="1"
-            android:background="@drawable/step_inactive" />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
 
-            <!-- Modalità Selezione Section -->
+            <!-- Progress Indicator -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:id="@+id/progress_step_1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/step_completed" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="@color/primary_color" />
+
+                <View
+                    android:id="@+id/progress_step_2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/step_completed" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="@color/primary_color" />
+
+                <View
+                    android:id="@+id/progress_step_3"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/step_completed" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="@color/primary_color" />
+
+                <View
+                    android:id="@+id/progress_step_4"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/step_active" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="@color/inactive_gray" />
+
+                <View
+                    android:id="@+id/progress_step_5"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/step_inactive" />
+
+            </LinearLayout>
+
+            <!-- Step Counter -->
+            <TextView
+                android:id="@+id/tv_step_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Step 4 di 5"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Titolo -->
+            <TextView
+                android:id="@+id/tv_titolo_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selezione Esperti"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:textAlignment="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Descrizione -->
+            <TextView
+                android:id="@+id/tv_descrizione_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scegli come selezionare gli esperti per la tua consulenza"
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:textAlignment="center"
+                android:lineSpacingExtra="2dp" />
+
+        </LinearLayout>
+
+        <!-- Modalità Selezione Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/card_background"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Modalità Selezione Esperti *"
-                    android:textSize="16sp"
+                    android:text="Come vuoi selezionare gli esperti?"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp" />
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="16dp" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_modalita"
@@ -127,225 +151,284 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Selezione Automatica -->
-                    <LinearLayout
+                    <RadioButton
+                        android:id="@+id/rb_automatica"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/option_card_background"
-                        android:padding="16dp"
-                        android:layout_marginBottom="12dp">
+                        android:text="Selezione automatica"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"
+                        android:padding="12dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/radio_button_background"
+                        android:button="@drawable/custom_radio_button"
+                        android:checked="true" />
 
-                        <RadioButton
-                            android:id="@+id/rb_automatica"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="🤖 Selezione Automatica (Consigliata)"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333"
-                            android:layout_marginBottom="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Il sistema selezionerà automaticamente i migliori esperti basandosi sulle tue esigenze, esperienza e distribuzioni scelte."
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginStart="32dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="✅ Più veloce • ✅ Esperti ottimizzati • ✅ Migliore copertura competenze"
-                            android:textSize="12sp"
-                            android:textColor="#4CAF50"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                    <!-- Selezione Manuale -->
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/option_card_background"
-                        android:padding="16dp">
+                        android:text="✨ Il sistema assegnerà automaticamente i migliori esperti disponibili in base ai tuoi requisiti"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginEnd="16dp" />
 
-                        <RadioButton
-                            android:id="@+id/rb_manuale"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="👤 Selezione Manuale"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333"
-                            android:layout_marginBottom="8dp" />
+                    <RadioButton
+                        android:id="@+id/rb_manuale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selezione manuale"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"
+                        android:padding="12dp"
+                        android:background="@drawable/radio_button_background"
+                        android:button="@drawable/custom_radio_button" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Scegli personalmente gli esperti dalla lista. Puoi selezionare da 1 a 3 esperti."
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginStart="32dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="⚠️ Assicurati di scegliere esperti con competenze complementari"
-                            android:textSize="12sp"
-                            android:textColor="#FF9800"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="👤 Scegli tu stesso gli esperti dalla lista (massimo 3)"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp" />
 
                 </RadioGroup>
 
             </LinearLayout>
 
-            <!-- Info Selezione -->
-            <TextView
-                android:id="@+id/tv_info_selezione"
+        </androidx.cardview.widget.CardView>
+
+        <!-- Info Selezione -->
+        <TextView
+            android:id="@+id/tv_info_selezione"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✨ Il sistema selezionerà automaticamente i migliori esperti basandosi sui tuoi requisiti"
+            android:textSize="14sp"
+            android:textColor="@color/primary_color"
+            android:background="@drawable/info_background"
+            android:padding="12dp"
+            android:drawableStart="@drawable/ic_info_outline"
+            android:drawablePadding="8dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="visible" />
+
+        <!-- Sezione Selezione Manuale (inizialmente nascosta) -->
+        <LinearLayout
+            android:id="@+id/layout_selezione_manuale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Card Lista Esperti -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="✨ Il sistema selezionerà automaticamente i migliori esperti basandosi sui tuoi requisiti"
-                android:textSize="14sp"
-                android:textColor="#2196F3"
-                android:background="#E3F2FD"
-                android:padding="12dp"
                 android:layout_marginBottom="16dp"
-                android:visibility="visible" />
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
 
-            <!-- Selezione Manuale Esperti (inizialmente nascosta) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="👥 Seleziona Esperti"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Progress Bar per caricamento esperti -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="32dp">
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar_esperti"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:indeterminateTint="@color/primary_color"
+                            android:layout_marginBottom="16dp" />
+
+                        <TextView
+                            android:id="@+id/tv_loading_esperti"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Caricamento esperti disponibili..."
+                            android:textSize="14sp"
+                            android:textColor="@color/text_secondary"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <!-- Messaggio errore -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="32dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_errore_esperti"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Errore nel caricamento esperti"
+                            android:textColor="@color/error_color"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:visibility="gone"
+                            android:drawableTop="@drawable/ic_error_outline"
+                            android:drawablePadding="12dp"
+                            android:layout_marginBottom="16dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_retry_esperti"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Riprova"
+                            android:textColor="@android:color/white"
+                            android:backgroundTint="@color/primary_color"
+                            android:visibility="gone"
+                            app:icon="@drawable/ic_refresh"
+                            app:iconGravity="textStart" />
+
+                    </LinearLayout>
+
+                    <!-- Lista esperti -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_esperti"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:scrollbars="vertical"
+                        android:clipToPadding="false"
+                        android:paddingBottom="8dp"
+                        android:maxHeight="400dp"
+                        tools:listitem="@layout/item_esperto" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- Note per Esperti Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/layout_note_esperti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white">
+
             <LinearLayout
-                android:id="@+id/layout_selezione_manuale"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/card_background"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="👥 Seleziona Esperti"
-                    android:textSize="16sp"
+                    android:text="💬 Note per gli Esperti (opzionale)"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp" />
-
-                <!-- Loading esperti -->
-                <ProgressBar
-                    android:id="@+id/progress_bar_esperti"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginVertical="24dp"
-                    android:visibility="gone" />
-
-                <!-- Errore caricamento -->
-                <TextView
-                    android:id="@+id/tv_errore_esperti"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Errore nel caricamento degli esperti"
-                    android:textSize="14sp"
-                    android:textColor="#F44336"
-                    android:background="#FFEBEE"
-                    android:padding="12dp"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone" />
-
-                <!-- Lista esperti -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_esperti"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <!-- Note per Esperti -->
-            <LinearLayout
-                android:id="@+id/layout_note_esperti"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/card_background"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="📝 Note per gli Esperti (Opzionale)"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="@color/text_primary"
                     android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Aggiungi informazioni aggiuntive che potrebbero aiutare gli esperti a darti consigli più precisi"
+                    android:text="Scrivi eventuali richieste specifiche o informazioni aggiuntive per gli esperti"
                     android:textSize="14sp"
-                    android:textColor="#666666"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginBottom="12dp" />
 
-                <EditText
-                    android:id="@+id/et_note_per_esperti"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="@drawable/edittext_background"
-                    android:padding="12dp"
-                    android:gravity="top"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:maxLines="4"
-                    android:scrollbars="vertical"
-                    android:hint="Es: Ho già usato Ubuntu per 2 anni ma vorrei qualcosa più personalizzabile. Il mio PC ha problemi con i driver NVIDIA..." />
+                    android:layout_height="wrap_content"
+                    android:hint="Es: Sono interessato principalmente al gaming e alla grafica 3D..."
+                    app:boxStrokeColor="@color/primary_color"
+                    app:hintTextColor="@color/text_secondary"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_note_per_esperti"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minLines="3"
+                        android:maxLines="6"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:gravity="top|start"
+                        android:scrollbars="vertical"
+                        android:maxLength="500" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
+        </androidx.cardview.widget.CardView>
+
+        <!-- Spacer per push dei bottoni in basso -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Bottoni Navigazione -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_indietro"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Indietro"
+                android:textColor="@color/primary_color"
+                android:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/primary_color"
+                app:strokeWidth="2dp"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconGravity="textStart"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_avanti"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="2"
+                android:layout_marginStart="8dp"
+                android:text="Avanti - Riepilogo"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/primary_color"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                android:enabled="true" />
+
         </LinearLayout>
-
-    </ScrollView>
-
-    <!-- Bottom Navigation -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:gravity="center_vertical">
-
-        <Button
-            android:id="@+id/btn_indietro"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="Indietro"
-            android:textColor="#666666"
-            android:background="@drawable/button_outline"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/btn_avanti"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="2"
-            android:layout_marginStart="8dp"
-            android:text="Avanti - Riepilogo"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/button_primary"
-            android:textSize="16sp"
-            android:enabled="true" />
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

@@ -12,12 +12,11 @@
     <color name="black">#000000</color>
 
     <!-- Background -->
-    <color name="background_light">#F5F5F5</color>
+
     <color name="info_background">#E3F2FD</color>
 
     <!-- Testo -->
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
+
 
     <!-- Progress Steps -->
     <color name="step_connector">#FFFFFF60</color>
@@ -30,7 +29,7 @@
     <color name="rating_stars">#FFC107</color>
 
     <!-- Error -->
-    <color name="error_color">#F44336</color>
+
 
     <!-- Badge Colors -->
     <color name="badge_principianti">#4CAF50</color>
@@ -39,6 +38,33 @@
     <color name="badge_esperto">#9C27B0</color>
 
     <!-- Tags -->
-    <color name="tag_background">#E1F5FE</color>
+    <color name="background_light">#F8F9FA</color>
+    <color name="text_primary">#212529</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="primary_color">#007BFF</color>
+    <color name="inactive_gray">#DEE2E6</color>
+    <color name="error_color">#DC3545</color>
+
+    <color name="tag_background">#F5F5F5</color>
+    <color name="tag_text_color">#616161</color>
+    <color name="tag_border_color">#E0E0E0</color>
+
+    <!-- Tag success - verde chiaro -->
     <color name="tag_success_background">#E8F5E8</color>
+    <color name="tag_success_text_color">#2E7D32</color>
+    <color name="tag_success_border_color">#C8E6C9</color>
+
+    <!-- Colori per info background (se vuoi personalizzarli) -->
+    <color name="info_background_color">#E3F2FD</color>
+    <color name="info_border_color">#BBDEFB</color>
+    <color name="info_text_color">#1976D2</color>
+
+    <!-- Altri colori utili per i tag -->
+    <color name="tag_warning_background">#FFF3E0</color>
+    <color name="tag_warning_text_color">#F57C00</color>
+    <color name="tag_warning_border_color">#FFCC02</color>
+
+    <color name="tag_error_background">#FFEBEE</color>
+    <color name="tag_error_text_color">#D32F2F</color>
+    <color name="tag_error_border_color">#FFCDD2</color>
 </resources>

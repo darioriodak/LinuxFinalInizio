@@ -111,10 +111,15 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
     private void setupRadioGroups() {
         // Default: selezione automatica
         rbAutomatica.setChecked(true);
+        rbManuale.setChecked(false);
         layoutSelezioneManuale.setVisibility(View.GONE);
 
         radioGroupModalita.setOnCheckedChangeListener((group, checkedId) -> {
+            // ✅ CORREZIONE: Deseleziona esplicitamente l'altro RadioButton
             if (checkedId == R.id.rb_automatica) {
+                rbAutomatica.setChecked(true);
+                rbManuale.setChecked(false);
+
                 // Modalità automatica
                 layoutSelezioneManuale.setVisibility(View.GONE);
                 tvDescrizione.setText("Il sistema selezionerà automaticamente i migliori esperti disponibili");
@@ -122,6 +127,9 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 updateInfoSelezione();
 
             } else if (checkedId == R.id.rb_manuale) {
+                rbManuale.setChecked(true);
+                rbAutomatica.setChecked(false);
+
                 // Modalità manuale
                 layoutSelezioneManuale.setVisibility(View.VISIBLE);
                 tvDescrizione.setText("Seleziona manualmente gli esperti che preferisci (massimo 3)");
@@ -129,6 +137,10 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 // Carica esperti se non già caricati
                 if (espertiDisponibili.isEmpty()) {
                     loadEsperti();
+                } else {
+                    // Se già caricati, mostra subito la RecyclerView
+                    recyclerViewEsperti.setVisibility(View.VISIBLE);
+                    updateInfoSelezione();
                 }
             }
 
@@ -219,14 +231,21 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
 
         // Carica modalità selezione
         String modalitaSelezione = savedData.getString("modalitaSelezione", "AUTOMATICA");
+
         if ("MANUALE".equals(modalitaSelezione)) {
+            // ✅ CORREZIONE: Imposta esplicitamente entrambi i RadioButton
             rbManuale.setChecked(true);
+            rbAutomatica.setChecked(false);
+
             layoutSelezioneManuale.setVisibility(View.VISIBLE);
             tvDescrizione.setText("Seleziona manualmente gli esperti che preferisci (massimo 3)");
 
             // Carica esperti se modalità manuale
             if (espertiDisponibili.isEmpty()) {
                 loadEsperti();
+            } else {
+                // Se già caricati, mostra la RecyclerView
+                recyclerViewEsperti.setVisibility(View.VISIBLE);
             }
 
             // Ripristina esperti selezionati dopo il caricamento
@@ -236,8 +255,12 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 // (verrà fatto in onEspertiLoaded)
             }
         } else {
+
             rbAutomatica.setChecked(true);
+            rbManuale.setChecked(false);
+
             layoutSelezioneManuale.setVisibility(View.GONE);
+            tvDescrizione.setText("Il sistema selezionerà automaticamente i migliori esperti disponibili");
         }
 
         // Carica note
@@ -247,6 +270,7 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
         etNotePerEsperti.setText(savedNote);
 
         updateButtonState();
+        updateInfoSelezione();
     }
 
     private void updateInfoSelezione() {
@@ -306,13 +330,19 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
             espertiDisponibili.addAll(esperti);
             espertiAdapter.updateEsperti(espertiDisponibili);
 
-            recyclerViewEsperti.setVisibility(View.VISIBLE);
-            tvErroreEsperti.setVisibility(View.GONE);
+            // ✅ CORREZIONE: Forza sempre la visibilità se modalità manuale è selezionata
+            if (rbManuale.isChecked()) {
+                recyclerViewEsperti.setVisibility(View.VISIBLE);
+                recyclerViewEsperti.requestLayout(); // Forza il ricalcolo del layout
 
-            // Ripristina selezioni salvate
-            restoreSavedSelections();
+                tvErroreEsperti.setVisibility(View.GONE);
 
-            android.util.Log.d("Step4Activity", "RecyclerView aggiornato con " + esperti.size() + " esperti");
+                // Ripristina selezioni salvate
+                restoreSavedSelections();
+
+                android.util.Log.d("Step4Activity", "RecyclerView FORZATO visible con " + esperti.size() + " esperti");
+            }
+
         } else {
             android.util.Log.e("Step4Activity", "Lista esperti vuota o null");
             tvErroreEsperti.setText("Nessun esperto disponibile al momento");
