@@ -59,7 +59,7 @@ public class LoadEspertiTask extends AsyncTask<Void, Void, LoadEspertiTask.TaskR
 
         try {
             // URL per caricare esperti (puoi filtrare lato server o client)
-            URL url = new URL("http://10.0.2.2:8080/LinuxFinal/EspertiServlet/disponibili");
+            URL url = new URL("http://10.0.2.2:8080/LinuxFinal/DatiSupportoServlet/esperti");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; utf-8");

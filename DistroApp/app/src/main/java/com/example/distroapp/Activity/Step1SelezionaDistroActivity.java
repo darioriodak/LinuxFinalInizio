@@ -182,7 +182,7 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
     }
 
     private void proceedToNextStep() {
-        Intent intent = new Intent(this, Step2HardwareActivity.class);
+        Intent intent = new Intent(this, Step3EsperienzaActivity.class);
 
         // Passa i dati al prossimo step
         ArrayList<Integer> selectedIds = new ArrayList<>();

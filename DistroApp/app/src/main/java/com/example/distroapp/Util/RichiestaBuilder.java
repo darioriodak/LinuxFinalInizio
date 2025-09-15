@@ -94,9 +94,9 @@ public class RichiestaBuilder {
             richiesta.put("espertiSelezionati", new JSONArray()); // Array vuoto per selezione automatica
         }
 
-        // ===== STEP 2: HARDWARE (OPZIONALE) =====
-        Bundle step2Data = dataManager.getStep2Data();
-        addHardwareDataIfPresent(richiesta, step2Data);
+
+
+
 
         // ===== NOTE AGGIUNTIVE =====
         String noteAggiuntive = buildNoteAggiuntive(step3Data, modalitaUtilizzo, modalitaSelezione);
@@ -232,22 +232,6 @@ public class RichiestaBuilder {
         riepilogo.append("\n");
 
         // Hardware (se presente)
-        Bundle step2Data = dataManager.getStep2Data();
-        boolean hasHardware = !step2Data.getString("cpu", "").isEmpty() ||
-                !step2Data.getString("ram", "").isEmpty();
-
-        if (hasHardware) {
-            riepilogo.append("💻 Hardware specificato:\n");
-            String cpu = step2Data.getString("cpu", "");
-            if (!cpu.isEmpty()) {
-                riepilogo.append("• CPU: ").append(cpu).append("\n");
-            }
-            String ram = step2Data.getString("ram", "");
-            if (!ram.isEmpty() && !"Non specificato".equals(ram)) {
-                riepilogo.append("• RAM: ").append(ram).append("\n");
-            }
-            riepilogo.append("\n");
-        }
 
         riepilogo.append("✅ Pronto per l'invio agli esperti!");
 
