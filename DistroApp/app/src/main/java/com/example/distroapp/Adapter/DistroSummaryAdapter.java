@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class DistroSummaryAdapter extends RecyclerView.Adapter<DistroSummaryAdapter.DistroSummaryViewHolder> {
 
+    private final OnDistroClickListener clickListener;
     private List<DistroSummaryDTO> distribuzioni;
     private List<DistroSummaryDTO> distribuzioniSelezionate;
     private OnDistribuzioniSelezionateListener listener;
@@ -30,12 +31,21 @@ public class DistroSummaryAdapter extends RecyclerView.Adapter<DistroSummaryAdap
     public interface OnDistribuzioniSelezionateListener {
         void onDistribuzioniSelezionate(List<DistroSummaryDTO> distribuzioniSelezionate);
     }
+    public interface OnDistroClickListener {
+        void onDistroClick(DistroSummaryDTO distro);
+    }
 
-    public DistroSummaryAdapter(List<DistroSummaryDTO> distribuzioni,
+    public DistroSummaryAdapter(OnDistroClickListener clickListener, List<DistroSummaryDTO> distribuzioni,
                                 OnDistribuzioniSelezionateListener listener) {
+        this.clickListener = clickListener;
         this.distribuzioni = distribuzioni != null ? distribuzioni : new ArrayList<>();
         this.distribuzioniSelezionate = new ArrayList<>();
         this.listener = listener;
+    }
+    public DistroSummaryAdapter(List<DistroSummaryDTO> distribuzioni, OnDistroClickListener clickListener) {
+        this.distribuzioni = distribuzioni != null ? distribuzioni : new ArrayList<>();
+        this.distribuzioniSelezionate = new ArrayList<>();
+        this.clickListener = clickListener;  // Nuovo field
     }
 
     @NonNull
@@ -153,6 +163,9 @@ public class DistroSummaryAdapter extends RecyclerView.Adapter<DistroSummaryAdap
                 // Notifica il listener
                 if (listener != null) {
                     listener.onDistribuzioniSelezionate(getDistribuzioniSelezionate());
+                }
+                if (clickListener != null) {
+                    clickListener.onDistroClick(distro);
                 }
             });
 

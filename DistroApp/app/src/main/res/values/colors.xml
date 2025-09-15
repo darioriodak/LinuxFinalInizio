@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Colori Primari -->
+    <color name="primary">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#BBDEFB</color>
+
+    <!-- Colori di Sistema -->
+    <color name="white">#FFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Background -->
+    <color name="background_light">#F5F5F5</color>
+    <color name="info_background">#E3F2FD</color>
+
+    <!-- Testo -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Progress Steps -->
+    <color name="step_connector">#FFFFFF60</color>
+    <color name="success_color">#4CAF50</color>
+
+    <!-- Buttons -->
+    <color name="button_disabled">#BDBDBD</color>
+
+    <!-- Rating -->
+    <color name="rating_stars">#FFC107</color>
+
+    <!-- Error -->
+    <color name="error_color">#F44336</color>
+
+    <!-- Badge Colors -->
+    <color name="badge_principianti">#4CAF50</color>
+    <color name="badge_intermedio">#FF9800</color>
+    <color name="badge_avanzato">#FF5722</color>
+    <color name="badge_esperto">#9C27B0</color>
+
+    <!-- Tags -->
+    <color name="tag_background">#E1F5FE</color>
+    <color name="tag_success_background">#E8F5E8</color>
 </resources>

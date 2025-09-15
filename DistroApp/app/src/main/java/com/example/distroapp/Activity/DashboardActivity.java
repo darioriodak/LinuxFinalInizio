@@ -102,7 +102,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Avvia il TUO wizard 4-step!
-                Intent intent = new Intent(DashboardActivity.this, CreaRichiestaActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, Step1SelezionaDistroActivity.class);
                 intent.putExtra("USER_DATA", currentUser);
                 startActivity(intent);
             }
