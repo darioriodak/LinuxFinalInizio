@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import java.util.List;
+
 /**
  * Gestore centralizzato per i dati del wizard di creazione richiesta
  * Salva automaticamente in SharedPreferences
@@ -54,4 +56,12 @@ public class WizardDataManager {
         editor.clear();
         editor.apply();
     }
+
+    public void clearStep2Data() {
+    }
+
+    public void saveStep3Data(String esperienza, List<String> modalitaSelezionate, String dettagli, String motivazione) {
+    }
+
+
 }

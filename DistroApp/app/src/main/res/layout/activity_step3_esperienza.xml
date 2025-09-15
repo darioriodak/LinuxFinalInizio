@@ -1,10 +1,310 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.Step3EsperienzaActivity">
+    android:fillViewport="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Section -->
+        <TextView
+            android:id="@+id/tv_step_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step 3 di 5"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_titolo_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Esperienza e Utilizzo"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_descrizione_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Parlaci della tua esperienza con Linux e come intendi utilizzarlo"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Progress Indicator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
+
+            <View
+                android:id="@+id/progress_step_1"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:background="@drawable/step_completed"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_2"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:background="@drawable/step_completed"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_3"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:background="@drawable/step_active"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_4"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:background="@drawable/step_inactive"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_5"
+                android:layout_width="40dp"
+                android:layout_height="6dp"
+                android:background="@drawable/step_inactive" />
+
+        </LinearLayout>
+
+        <!-- Form Content -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Livello Esperienza -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Livello di Esperienza con Linux *"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp" />
+
+                <Spinner
+                    android:id="@+id/spinner_esperienza"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:minHeight="48dp" />
+
+                <!-- Modalità di Utilizzo -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Come intendi utilizzare Linux? *"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Seleziona tutte le modalità che ti interessano:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layout_modalita_utilizzo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/cb_desktop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Desktop / Uso quotidiano"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_programmazione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Programmazione / Sviluppo software"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_server"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Server / Hosting / Cloud"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_gaming"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gaming"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_sicurezza"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sicurezza / Penetration Testing"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_multimedia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Multimedia / Editing video/audio"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_ufficio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Produttività ufficio"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_educazione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Scopi educativi / Apprendimento"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Dettagli Utilizzo -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dettagli sul tuo utilizzo (opzionale)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/et_dettagli_utilizzo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:hint="Descrivi più nel dettaglio come intendi usare Linux, quali programmi ti servono, eventuali requisiti specifici..."
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Motivazione Distribuzioni -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Perché hai scelto queste distribuzioni? (opzionale)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/et_motivazione_distro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:hint="Cosa ti ha attratto delle distribuzioni che hai selezionato nel primo step?"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Navigation Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btn_indietro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Indietro"
+                android:textColor="@android:color/black"
+                android:background="@android:color/transparent"
+                android:layout_marginEnd="16dp"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <Button
+                android:id="@+id/btn_avanti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Avanti"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:textColor="@android:color/white"
+                android:minWidth="120dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

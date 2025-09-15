@@ -17,10 +17,10 @@ public class Step2HardwareActivity extends AppCompatActivity {
     private View progressStep1, progressStep2, progressStep3, progressStep4, progressStep5;
 
     // Hardware Form Components
-    private EditText etCpu, etStorageSize, etGpuDettagli;
-    private Spinner spinnerRam, spinnerStorageType;
-    private RadioGroup radioGroupGpu;
-    private RadioButton rbGpuIntegrata, rbGpuDedicata, rbGpuNessuna;
+    private EditText etCpu, etSchedaVideo;
+    private Spinner spinnerRam, spinnerSpazioArchiviazione, spinnerTipoSistema;
+    private RadioGroup radioGroupHardwareRequired;
+    private RadioButton rbHardwareObbligatorio, rbHardwareOpzionale;
 
     private Button btnIndietro, btnAvanti;
 
@@ -56,16 +56,15 @@ public class Step2HardwareActivity extends AppCompatActivity {
 
         // Hardware form
         etCpu = findViewById(R.id.et_cpu);
-        etStorageSize = findViewById(R.id.et_storage_size);
-        etGpuDettagli = findViewById(R.id.et_gpu_dettagli);
+        etSchedaVideo = findViewById(R.id.et_scheda_video);
 
         spinnerRam = findViewById(R.id.spinner_ram);
-        spinnerStorageType = findViewById(R.id.spinner_storage_type);
+        spinnerSpazioArchiviazione = findViewById(R.id.spinner_spazio_archiviazione);
+        spinnerTipoSistema = findViewById(R.id.spinner_tipo_sistema);
 
-        radioGroupGpu = findViewById(R.id.radio_group_gpu);
-        rbGpuIntegrata = findViewById(R.id.rb_gpu_integrata);
-        rbGpuDedicata = findViewById(R.id.rb_gpu_dedicata);
-        rbGpuNessuna = findViewById(R.id.rb_gpu_nessuna);
+        radioGroupHardwareRequired = findViewById(R.id.radio_group_hardware_required);
+        rbHardwareObbligatorio = findViewById(R.id.rb_hardware_obbligatorio);
+        rbHardwareOpzionale = findViewById(R.id.rb_hardware_opzionale);
 
         btnIndietro = findViewById(R.id.btn_indietro);
         btnAvanti = findViewById(R.id.btn_avanti);
@@ -73,7 +72,7 @@ public class Step2HardwareActivity extends AppCompatActivity {
 
     private void setupProgressIndicator() {
         tvTitolo.setText("Specifiche Hardware");
-        tvDescrizione.setText("Inserisci le specifiche del tuo hardware attuale o desiderato");
+        tvDescrizione.setText("Inserisci le specifiche del tuo hardware (opzionale ma consigliato)");
         tvStepCounter.setText("Step 2 di 5");
 
         // Evidenzia step corrente
@@ -85,46 +84,99 @@ public class Step2HardwareActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        // Setup RAM Spinner
+        // Setup RAM Spinner - compatibile con server (stringa)
         String[] ramOptions = {
-                "Seleziona RAM...",
-                "2 GB", "4 GB", "8 GB", "16 GB", "32 GB", "64 GB", "Più di 64 GB"
+                "Non specificato",
+                "2 GB o meno",
+                "4 GB",
+                "8 GB",
+                "16 GB",
+                "32 GB",
+                "64 GB",
+                "Più di 64 GB"
         };
         ArrayAdapter<String> ramAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, ramOptions);
         ramAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRam.setAdapter(ramAdapter);
 
-        // Setup Storage Type Spinner
-        String[] storageOptions = {
-                "Seleziona tipo storage...",
-                "HDD (Hard Disk Drive)",
-                "SSD (Solid State Drive)",
-                "NVMe SSD",
-                "eMMC",
-                "HDD + SSD (Ibrido)"
+        // Setup Spazio Archiviazione Spinner
+        String[] spazioOptions = {
+                "Non specificato",
+                "128 GB o meno",
+                "256 GB",
+                "512 GB",
+                "1 TB",
+                "2 TB",
+                "4 TB",
+                "Più di 4 TB"
         };
-        ArrayAdapter<String> storageAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, storageOptions);
-        storageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStorageType.setAdapter(storageAdapter);
+        ArrayAdapter<String> spazioAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, spazioOptions);
+        spazioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSpazioArchiviazione.setAdapter(spazioAdapter);
+
+        // Setup Tipo Sistema Spinner - compatibile con TipoSistema enum
+        String[] tipoSistemaOptions = {
+                "Non specificato",
+                "DESKTOP",
+                "LAPTOP",
+                "SERVER",
+                "WORKSTATION",
+                "MINI_PC",
+                "ALL_IN_ONE"
+        };
+        ArrayAdapter<String> tipoSistemaAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, tipoSistemaOptions);
+        tipoSistemaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoSistema.setAdapter(tipoSistemaAdapter);
+
+        // Auto-save sui spinner
+        AdapterView.OnItemSelectedListener autoSaveListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                saveCurrentData();
+                updateButtonState();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+
+        spinnerRam.setOnItemSelectedListener(autoSaveListener);
+        spinnerSpazioArchiviazione.setOnItemSelectedListener(autoSaveListener);
+        spinnerTipoSistema.setOnItemSelectedListener(autoSaveListener);
     }
 
     private void setupRadioGroups() {
-        radioGroupGpu.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rb_gpu_dedicata) {
-                etGpuDettagli.setVisibility(View.VISIBLE);
-                etGpuDettagli.setHint("Specifica marca e modello GPU (es: NVIDIA GTX 1060)");
-            } else if (checkedId == R.id.rb_gpu_integrata) {
-                etGpuDettagli.setVisibility(View.VISIBLE);
-                etGpuDettagli.setHint("Specifica GPU integrata (es: Intel UHD Graphics)");
-            } else {
-                etGpuDettagli.setVisibility(View.GONE);
-                etGpuDettagli.setText("");
-            }
-
+        // Setup radio group per decidere se l'hardware è obbligatorio
+        radioGroupHardwareRequired.setOnCheckedChangeListener((group, checkedId) -> {
+            toggleHardwareFields(checkedId == R.id.rb_hardware_obbligatorio);
             saveCurrentData();
+            updateButtonState();
         });
+
+        // Default: hardware opzionale
+        rbHardwareOpzionale.setChecked(true);
+        toggleHardwareFields(false);
+    }
+
+    private void toggleHardwareFields(boolean required) {
+        // Mostra/nasconde campi hardware basandosi sulla selezione
+        View[] hardwareFields = {etCpu, etSchedaVideo, spinnerRam,
+                spinnerSpazioArchiviazione, spinnerTipoSistema};
+
+        for (View field : hardwareFields) {
+            field.setVisibility(required ? View.VISIBLE : View.VISIBLE); // Sempre visibili per ora
+            // Potremmo nasconderli se l'utente sceglie "salta questo step"
+        }
+
+        // Aggiorna descrizione
+        if (required) {
+            tvDescrizione.setText("Inserisci le specifiche del tuo hardware attuale");
+        } else {
+            tvDescrizione.setText("Hardware opzionale - puoi saltare se non conosci le specifiche");
+        }
     }
 
     private void setupButtons() {
@@ -141,115 +193,74 @@ public class Step2HardwareActivity extends AppCompatActivity {
         });
 
         // Auto-save sui campi di testo
-        etCpu.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) saveCurrentData();
-        });
-
-        etStorageSize.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) saveCurrentData();
-        });
-
-        etGpuDettagli.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) saveCurrentData();
-        });
-
-        // Auto-save sui spinner
-        spinnerRam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) saveCurrentData(); // Evita il salvataggio del placeholder
+        View.OnFocusChangeListener autoSaveFocusListener = (v, hasFocus) -> {
+            if (!hasFocus) {
+                saveCurrentData();
+                updateButtonState();
             }
+        };
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        etCpu.setOnFocusChangeListener(autoSaveFocusListener);
+        etSchedaVideo.setOnFocusChangeListener(autoSaveFocusListener);
 
-        spinnerStorageType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) saveCurrentData();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        updateButtonState();
     }
 
     private boolean validateStep() {
-        boolean isValid = true;
-        StringBuilder errors = new StringBuilder();
+        // Se hardware è obbligatorio, valida i campi
+        if (rbHardwareObbligatorio.isChecked()) {
+            StringBuilder errors = new StringBuilder();
+            boolean isValid = true;
 
-        // Validazione CPU
-        if (TextUtils.isEmpty(etCpu.getText().toString().trim())) {
-            errors.append("• Inserisci le specifiche del processore\n");
-            etCpu.setError("Campo obbligatorio");
-            isValid = false;
-        }
-
-        // Validazione RAM
-        if (spinnerRam.getSelectedItemPosition() == 0) {
-            errors.append("• Seleziona la quantità di RAM\n");
-            isValid = false;
-        }
-
-        // Validazione Storage Size
-        String storageSize = etStorageSize.getText().toString().trim();
-        if (TextUtils.isEmpty(storageSize)) {
-            errors.append("• Inserisci la dimensione dello storage\n");
-            etStorageSize.setError("Campo obbligatorio");
-            isValid = false;
-        }
-
-        // Validazione Storage Type
-        if (spinnerStorageType.getSelectedItemPosition() == 0) {
-            errors.append("• Seleziona il tipo di storage\n");
-            isValid = false;
-        }
-
-        // Validazione GPU
-        if (radioGroupGpu.getCheckedRadioButtonId() == -1) {
-            errors.append("• Seleziona il tipo di scheda grafica\n");
-            isValid = false;
-        } else {
-            int selectedGpu = radioGroupGpu.getCheckedRadioButtonId();
-            if ((selectedGpu == R.id.rb_gpu_dedicata || selectedGpu == R.id.rb_gpu_integrata) &&
-                    TextUtils.isEmpty(etGpuDettagli.getText().toString().trim())) {
-                errors.append("• Specifica i dettagli della scheda grafica\n");
-                etGpuDettagli.setError("Campo obbligatorio per questo tipo di GPU");
+            // Validazione CPU se obbligatorio
+            if (TextUtils.isEmpty(etCpu.getText().toString().trim())) {
+                errors.append("• Inserisci le specifiche del processore\n");
+                etCpu.setError("Campo obbligatorio");
                 isValid = false;
+            }
+
+            if (!isValid) {
+                Toast.makeText(this, "Completa i campi obbligatori:\n" + errors.toString(),
+                        Toast.LENGTH_LONG).show();
+                return false;
             }
         }
 
-        if (!isValid) {
-            Toast.makeText(this, "Completa tutti i campi obbligatori:\n" + errors.toString(),
-                    Toast.LENGTH_LONG).show();
-        }
-
-        return isValid;
+        return true; // Hardware opzionale = sempre valido
     }
 
     private void saveCurrentData() {
-        String cpu = etCpu.getText().toString().trim();
-        String ram = spinnerRam.getSelectedItemPosition() > 0 ?
-                spinnerRam.getSelectedItem().toString() : "";
-        String storageSize = etStorageSize.getText().toString().trim();
-        String storageType = spinnerStorageType.getSelectedItemPosition() > 0 ?
-                spinnerStorageType.getSelectedItem().toString() : "";
+        // Raccogli dati solo se alcuni campi sono compilati o hardware obbligatorio
+        boolean isHardwareRequired = rbHardwareObbligatorio.isChecked();
+        boolean hasHardwareData = hasAnyHardwareData();
 
-        String gpuType = "";
-        String gpuDetails = etGpuDettagli.getText().toString().trim();
+        if (isHardwareRequired || hasHardwareData) {
+            String cpu = etCpu.getText().toString().trim();
+            String ram = getSpinnerValueOrNull(spinnerRam);
+            String spazioArchiviazione = getSpinnerValueOrNull(spinnerSpazioArchiviazione);
+            String schedaVideo = etSchedaVideo.getText().toString().trim();
+            String tipoSistema = getSpinnerValueOrNull(spinnerTipoSistema);
 
-        int checkedGpuId = radioGroupGpu.getCheckedRadioButtonId();
-        if (checkedGpuId == R.id.rb_gpu_integrata) {
-            gpuType = "Integrata";
-        } else if (checkedGpuId == R.id.rb_gpu_dedicata) {
-            gpuType = "Dedicata";
-        } else if (checkedGpuId == R.id.rb_gpu_nessuna) {
-            gpuType = "Nessuna";
-            gpuDetails = ""; // Reset dettagli se "Nessuna"
+            dataManager.saveStep2Data(cpu, ram, spazioArchiviazione, schedaVideo, tipoSistema, String.valueOf(isHardwareRequired));
+        } else {
+            // Pulisci dati se non necessari
+            dataManager.clearStep2Data();
         }
+    }
 
-        dataManager.saveStep2Data(cpu, ram, storageSize, storageType, gpuType, gpuDetails);
+    private boolean hasAnyHardwareData() {
+        return !TextUtils.isEmpty(etCpu.getText().toString().trim()) ||
+                !TextUtils.isEmpty(etSchedaVideo.getText().toString().trim()) ||
+                spinnerRam.getSelectedItemPosition() > 0 ||
+                spinnerSpazioArchiviazione.getSelectedItemPosition() > 0 ||
+                spinnerTipoSistema.getSelectedItemPosition() > 0;
+    }
+
+    private String getSpinnerValueOrNull(Spinner spinner) {
+        if (spinner.getSelectedItemPosition() > 0) {
+            return spinner.getSelectedItem().toString();
+        }
+        return null;
     }
 
     private void loadSavedData() {
@@ -260,45 +271,59 @@ public class Step2HardwareActivity extends AppCompatActivity {
 
         // Carica RAM
         String savedRam = savedData.getString("ram", "");
-        if (!savedRam.isEmpty()) {
-            ArrayAdapter<String> ramAdapter = (ArrayAdapter<String>) spinnerRam.getAdapter();
-            int ramPosition = ramAdapter.getPosition(savedRam);
-            if (ramPosition >= 0) {
-                spinnerRam.setSelection(ramPosition);
+        setSpinnerSelection(spinnerRam, savedRam);
+
+        // Carica Spazio Archiviazione
+        String savedSpazio = savedData.getString("spazioArchiviazione", "");
+        setSpinnerSelection(spinnerSpazioArchiviazione, savedSpazio);
+
+        // Carica Scheda Video
+        etSchedaVideo.setText(savedData.getString("schedaVideo", ""));
+
+        // Carica Tipo Sistema
+        String savedTipoSistema = savedData.getString("tipoSistema", "");
+        setSpinnerSelection(spinnerTipoSistema, savedTipoSistema);
+
+        // Carica se hardware è obbligatorio
+        boolean isRequired = savedData.getBoolean("isRequired", false);
+        if (isRequired) {
+            rbHardwareObbligatorio.setChecked(true);
+        } else {
+            rbHardwareOpzionale.setChecked(true);
+        }
+        toggleHardwareFields(isRequired);
+
+        updateButtonState();
+    }
+
+    private void setSpinnerSelection(Spinner spinner, String value) {
+        if (value != null && !value.isEmpty()) {
+            ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+            int position = adapter.getPosition(value);
+            if (position >= 0) {
+                spinner.setSelection(position);
             }
         }
+    }
 
-        // Carica Storage
-        etStorageSize.setText(savedData.getString("storageSize", ""));
-        String savedStorageType = savedData.getString("storageType", "");
-        if (!savedStorageType.isEmpty()) {
-            ArrayAdapter<String> storageAdapter = (ArrayAdapter<String>) spinnerStorageType.getAdapter();
-            int storagePosition = storageAdapter.getPosition(savedStorageType);
-            if (storagePosition >= 0) {
-                spinnerStorageType.setSelection(storagePosition);
-            }
+    private void updateButtonState() {
+        // Il bottone è sempre attivo perché l'hardware è opzionale
+        boolean isValid = true;
+
+        // Se hardware obbligatorio, verifica che almeno CPU sia inserito
+        if (rbHardwareObbligatorio.isChecked()) {
+            isValid = !TextUtils.isEmpty(etCpu.getText().toString().trim());
         }
 
-        // Carica GPU
-        String savedGpuType = savedData.getString("gpuType", "");
-        switch (savedGpuType) {
-            case "Integrata":
-                rbGpuIntegrata.setChecked(true);
-                etGpuDettagli.setVisibility(View.VISIBLE);
-                etGpuDettagli.setHint("Specifica GPU integrata (es: Intel UHD Graphics)");
-                break;
-            case "Dedicata":
-                rbGpuDedicata.setChecked(true);
-                etGpuDettagli.setVisibility(View.VISIBLE);
-                etGpuDettagli.setHint("Specifica marca e modello GPU (es: NVIDIA GTX 1060)");
-                break;
-            case "Nessuna":
-                rbGpuNessuna.setChecked(true);
-                etGpuDettagli.setVisibility(View.GONE);
-                break;
-        }
+        btnAvanti.setEnabled(isValid);
 
-        etGpuDettagli.setText(savedData.getString("gpuDetails", ""));
+        if (isValid) {
+            btnAvanti.setText("Avanti - Esperienza");
+            btnAvanti.setAlpha(1.0f);
+        } else {
+            btnAvanti.setText("Completa i campi obbligatori");
+            btnAvanti.setAlpha(0.5f);
+        }
     }
 
     private void proceedToNextStep() {

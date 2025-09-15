@@ -1,146 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F5F5F5"
+    android:fillViewport="true"
     tools:context=".Activity.Step2HardwareActivity">
 
-    <!-- HEADER CON PROGRESS INDICATOR -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#2196F3"
-        android:padding="16dp"
-        android:elevation="4dp">
+        android:padding="16dp">
 
-        <!-- Progress Steps Indicator -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
-
-            <!-- Step 1 -->
-            <View
-                android:id="@+id/progress_step_1"
-                android:layout_width="32dp"
-                android:layout_height="4dp"
-                android:background="#4CAF50"
-                android:layout_marginEnd="6dp" />
-
-            <View
-                android:layout_width="16dp"
-                android:layout_height="2dp"
-                android:background="#66FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <!-- Step 2 -->
-            <View
-                android:id="@+id/progress_step_2"
-                android:layout_width="32dp"
-                android:layout_height="4dp"
-                android:background="#FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <View
-                android:layout_width="16dp"
-                android:layout_height="2dp"
-                android:background="#66FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <!-- Step 3 -->
-            <View
-                android:id="@+id/progress_step_3"
-                android:layout_width="32dp"
-                android:layout_height="4dp"
-                android:background="#33FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <View
-                android:layout_width="16dp"
-                android:layout_height="2dp"
-                android:background="#66FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <!-- Step 4 -->
-            <View
-                android:id="@+id/progress_step_4"
-                android:layout_width="32dp"
-                android:layout_height="4dp"
-                android:background="#33FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <View
-                android:layout_width="16dp"
-                android:layout_height="2dp"
-                android:background="#66FFFFFF"
-                android:layout_marginEnd="6dp" />
-
-            <!-- Step 5 -->
-            <View
-                android:id="@+id/progress_step_5"
-                android:layout_width="32dp"
-                android:layout_height="4dp"
-                android:background="#33FFFFFF" />
-
-        </LinearLayout>
-
-        <!-- Step Counter -->
-        <TextView
-            android:id="@+id/tv_step_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Step 2 di 4"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Titolo Step -->
-        <TextView
-            android:id="@+id/tv_titolo_step"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Specifiche Hardware"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Descrizione Step -->
-        <TextView
-            android:id="@+id/tv_descrizione_step"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Inserisci le specifiche del tuo hardware attuale o desiderato"
-            android:textColor="#CCFFFFFF"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.2" />
-
-    </LinearLayout>
-
-    <!-- CONTENUTO PRINCIPALE -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="24dp">
 
-            <!-- SEZIONE CPU -->
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/tv_titolo_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Specifiche Hardware"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tv_descrizione_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Inserisci le specifiche del tuo hardware (opzionale ma consigliato)"
+                android:textSize="16sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tv_step_counter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 2 di 5"
+                android:textSize="14sp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Progress Indicator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="32dp"
+            android:gravity="center">
+
+            <View
+                android:id="@+id/progress_step_1"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/step_completed"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_2"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/step_active"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_3"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/step_inactive"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_4"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/step_inactive"
+                android:layout_marginEnd="4dp" />
+
+            <View
+                android:id="@+id/progress_step_5"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/step_inactive" />
+
+        </LinearLayout>
+
+        <!-- Form Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <!-- Hardware Required Choice -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -156,230 +124,184 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💻 Processore (CPU)"
-                        android:textSize="18sp"
+                        android:text="Informazioni Hardware"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="12dp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group_hardware_required"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/rb_hardware_opzionale"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Hardware opzionale - compila se conosci le specifiche"
+                            android:textSize="14sp"
+                            android:padding="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/rb_hardware_obbligatorio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Voglio specificare il mio hardware attuale"
+                            android:textSize="14sp"
+                            android:padding="8dp" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hardware Details -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Specifiche Tecniche"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- CPU -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Processore (CPU)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
                     <EditText
                         android:id="@+id/et_cpu"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:hint="es: Intel Core i7-10750H, AMD Ryzen 5 5600X"
+                        android:layout_height="wrap_content"
+                        android:hint="Es: Intel Core i5-11400 / AMD Ryzen 5 5600X"
                         android:inputType="text"
-                        android:background="@drawable/edittext_background"
-                        android:padding="12dp" />
+                        android:layout_marginBottom="16dp" />
 
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- SEZIONE RAM -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
+                    <!-- RAM -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🧠 Memoria RAM"
-                        android:textSize="18sp"
+                        android:text="Memoria RAM"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"
                         android:layout_marginBottom="8dp" />
 
                     <Spinner
                         android:id="@+id/spinner_ram"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/spinner_background" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp" />
 
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- SEZIONE STORAGE -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
+                    <!-- Spazio Archiviazione -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💾 Archiviazione"
-                        android:textSize="18sp"
+                        android:text="Spazio di Archiviazione"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"
                         android:layout_marginBottom="8dp" />
 
-                    <LinearLayout
+                    <Spinner
+                        android:id="@+id/spinner_spazio_archiviazione"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginBottom="16dp" />
 
-                        <EditText
-                            android:id="@+id/et_storage_size"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:hint="Dimensione (GB)"
-                            android:inputType="number"
-                            android:background="@drawable/edittext_background"
-                            android:padding="12dp"
-                            android:layout_marginEnd="8dp" />
+                    <!-- Scheda Video -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Scheda Video (GPU)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="48dp"
-                            android:text="GB"
-                            android:gravity="center"
-                            android:textSize="16sp"
-                            android:textColor="#757575" />
+                    <EditText
+                        android:id="@+id/et_scheda_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Es: NVIDIA GTX 1060 / AMD RX 580 / Intel UHD Graphics"
+                        android:inputType="text"
+                        android:layout_marginBottom="16dp" />
 
-                    </LinearLayout>
+                    <!-- Tipo Sistema -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tipo di Sistema"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
 
                     <Spinner
-                        android:id="@+id/spinner_storage_type"
+                        android:id="@+id/spinner_tipo_sistema"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/spinner_background" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- SEZIONE GPU -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🎮 Scheda Grafica (GPU)"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#212121"
-                        android:layout_marginBottom="12dp" />
-
-                    <RadioGroup
-                        android:id="@+id/radio_group_gpu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
-
-                        <RadioButton
-                            android:id="@+id/rb_gpu_integrata"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="GPU Integrata (nel processore)"
-                            android:textSize="16sp"
-                            android:padding="8dp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_gpu_dedicata"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="GPU Dedicata (scheda separata)"
-                            android:textSize="16sp"
-                            android:padding="8dp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_gpu_nessuna"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Non so / Non importante"
-                            android:textSize="16sp"
-                            android:padding="8dp" />
-
-                    </RadioGroup>
-
-                    <EditText
-                        android:id="@+id/et_gpu_dettagli"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:hint="Specifica marca e modello"
-                        android:inputType="text"
-                        android:background="@drawable/edittext_background"
-                        android:padding="12dp"
-                        android:visibility="gone" />
+                        android:text="💡 Queste informazioni aiuteranno gli esperti a consigliarti distribuzioni ottimizzate per il tuo hardware"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_marginTop="8dp" />
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-
-            <!-- SPAZIO FINALE -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp" />
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-    </ScrollView>
+        <!-- Navigation Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center">
 
-    <!-- NAVIGATION BUTTONS -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFFFFF"
-        android:elevation="8dp">
+            <Button
+                android:id="@+id/btn_indietro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Indietro"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        <!-- Pulsante Indietro -->
-        <Button
-            android:id="@+id/btn_indietro"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Indietro"
-            android:textColor="#2196F3"
-            android:textSize="16sp"
-            android:background="@drawable/button_outline"
-            android:layout_marginEnd="8dp" />
+            <Button
+                android:id="@+id/btn_avanti"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Avanti - Esperienza"
+                android:layout_marginStart="8dp"
+                style="@style/Widget.MaterialComponents.Button" />
 
-        <!-- Pulsante Avanti -->
-        <Button
-            android:id="@+id/btn_avanti"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Avanti"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/button_primary"
-            android:layout_marginStart="8dp" />
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
