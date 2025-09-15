@@ -26,7 +26,6 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
     private RecyclerView recyclerViewDistribuzioni;
     private ProgressBar progressBarDistribuzioni;
     private TextView tvErroreDistribuzioni;
-    private EditText etMotivazioneDistro;
     private Button btnAvanti;
 
     // Data
@@ -95,6 +94,9 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
 
         recyclerViewDistribuzioni.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewDistribuzioni.setAdapter(distroAdapter);
+
+        recyclerViewDistribuzioni.setVisibility(View.VISIBLE);
+        android.util.Log.d("Step1Activity", "RecyclerView FORZATO VISIBLE");
     }
 
     private void loadDistribuzioni() {
@@ -164,8 +166,7 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
         }
         editor.putString("distribuzioni_selezionate", selectedIds.toString());
 
-        // Salva motivazione
-        editor.putString("motivazione_distro", etMotivazioneDistro.getText().toString());
+
 
         editor.apply();
     }
@@ -173,9 +174,9 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
     private void loadSavedData() {
         // Carica dati salvati se esistenti
         String savedDistros = wizardPrefs.getString("distribuzioni_selezionate", "");
-        String savedMotivazione = wizardPrefs.getString("motivazione_distro", "");
 
-        etMotivazioneDistro.setText(savedMotivazione);
+
+
 
         // Le distribuzioni verranno caricate dopo aver ricevuto la lista dal server
     }
@@ -189,7 +190,6 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
             selectedIds.add(distro.getId());
         }
         intent.putIntegerArrayListExtra("distribuzioni_selezionate", selectedIds);
-        intent.putExtra("motivazione_distro", etMotivazioneDistro.getText().toString());
 
         startActivity(intent);
     }
@@ -199,14 +199,25 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
     public void onDistroSummaryLoaded(List<DistroSummaryDTO> distribuzioni) {
         progressBarDistribuzioni.setVisibility(View.GONE);
 
+        android.util.Log.d("Step1Activity", "Ricevute " + (distribuzioni != null ? distribuzioni.size() : 0) + " distribuzioni");
+
         if (distribuzioni != null && !distribuzioni.isEmpty()) {
+            android.util.Log.d("Step1Activity", "Prima distribuzione: " + distribuzioni.get(0).getNomeDisplay());
+
             distribuzioniDisponibili.clear();
             distribuzioniDisponibili.addAll(distribuzioni);
             distroAdapter.notifyDataSetChanged();
 
+            // ✅ SOLUZIONE: Forza sempre la visibilità
+            recyclerViewDistribuzioni.setVisibility(View.VISIBLE);
+            recyclerViewDistribuzioni.requestLayout(); // Forza il ricalcolo del layout
+
             // Ripristina selezioni salvate
             restoreSavedSelections();
+
+            android.util.Log.d("Step1Activity", "RecyclerView FORZATO visible con " + distribuzioni.size() + " items");
         } else {
+            android.util.Log.e("Step1Activity", "Lista distribuzioni vuota o null");
             tvErroreDistribuzioni.setText("Nessuna distribuzione disponibile");
             tvErroreDistribuzioni.setVisibility(View.VISIBLE);
         }

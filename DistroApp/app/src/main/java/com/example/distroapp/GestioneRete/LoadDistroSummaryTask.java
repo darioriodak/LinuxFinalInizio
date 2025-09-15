@@ -136,6 +136,7 @@ public class LoadDistroSummaryTask extends AsyncTask<Void, Void, LoadDistroSumma
                 distro.setLivelloDifficolta(distroJson.getString("livelloDifficolta"));
             }
 
+            // ✅ CORRETTO: Usa punteggioPopolarita dal JSON
             if (distroJson.has("punteggioPopolarita")) {
                 distro.setPunteggioPopolarita(distroJson.getInt("punteggioPopolarita"));
             }

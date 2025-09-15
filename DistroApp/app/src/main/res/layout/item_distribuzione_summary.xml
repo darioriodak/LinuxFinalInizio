@@ -11,7 +11,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/white">
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- HEADER CON CHECKBOX E EMOJI -->
+        <!-- HEADER CON CHECKBOX E INFO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:buttonTint="@color/primary" />
+                android:buttonTint="#2196F3" />
 
             <!-- Emoji/Icona Distribuzione -->
             <TextView
@@ -42,8 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="🐧"
                 android:textSize="32sp"
-                android:layout_marginEnd="12dp"
-                tools:text="🐧" />
+                android:layout_marginEnd="12dp" />
 
             <!-- Nome e Popolarità -->
             <LinearLayout
@@ -58,12 +57,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Ubuntu Desktop"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#212121"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:maxLines="1"
-                    android:ellipsize="end"
-                    tools:text="Ubuntu Desktop" />
+                    android:ellipsize="end" />
 
                 <!-- Stelle Popolarità -->
                 <TextView
@@ -71,10 +69,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="★★★★★"
-                    android:textColor="@color/rating_stars"
+                    android:textColor="#FFC107"
                     android:textSize="14sp"
-                    android:layout_marginTop="2dp"
-                    tools:text="★★★★☆" />
+                    android:layout_marginTop="2dp" />
 
             </LinearLayout>
 
@@ -84,13 +81,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Principianti"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFF"
                 android:textSize="10sp"
                 android:textStyle="bold"
-                android:background="@drawable/badge_principianti"
+                android:background="#4CAF50"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
-                tools:text="Intermedio" />
+                android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
@@ -100,48 +97,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Distribuzione user-friendly basata su Debian, perfetta per iniziare con Linux"
-            android:textColor="@color/text_secondary"
+            android:textColor="#757575"
             android:textSize="14sp"
             android:lineSpacingMultiplier="1.2"
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:layout_marginBottom="12dp"
-            tools:text="Distribuzione user-friendly basata su Debian, perfetta per iniziare con Linux" />
+            android:maxLines="2"
+            android:ellipsize="end" />
 
-        <!-- TAGS/CARATTERISTICHE (Opzionale) -->
+        <!-- TAGS (Opzionale) -->
         <LinearLayout
             android:id="@+id/layoutTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone"
-            tools:visibility="visible">
-
-            <!-- Tag Example -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Desktop"
-                android:textColor="@color/primary"
-                android:textSize="10sp"
-                android:background="@drawable/tag_background"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="2dp"
-                android:layout_marginEnd="4dp"
-                tools:text="Desktop" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LTS"
-                android:textColor="@color/success_color"
-                android:textSize="10sp"
-                android:background="@drawable/tag_background_success"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="2dp"
-                tools:text="LTS" />
-
-        </LinearLayout>
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 
@@ -150,7 +119,7 @@
         android:id="@+id/selectionIndicator"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@color/primary"
+        android:background="#2196F3"
         android:visibility="invisible"
         android:layout_gravity="bottom" />
 
