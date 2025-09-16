@@ -36,7 +36,7 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
     private TextView tvInfoSelezione;
 
     // Note per esperti
-    private LinearLayout layoutNoteEsperti;
+    private androidx.cardview.widget.CardView layoutNoteEsperti;
     private EditText etNotePerEsperti;
 
     private Button btnIndietro, btnAvanti;
@@ -115,8 +115,12 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
         layoutSelezioneManuale.setVisibility(View.GONE);
 
         radioGroupModalita.setOnCheckedChangeListener((group, checkedId) -> {
-            // ✅ CORREZIONE: Deseleziona esplicitamente l'altro RadioButton
+            android.util.Log.d("Step4Activity", "RadioGroup cambiato: checkedId = " + checkedId);
+            android.util.Log.d("Step4Activity", "R.id.rb_automatica = " + R.id.rb_automatica);
+            android.util.Log.d("Step4Activity", "R.id.rb_manuale = " + R.id.rb_manuale);
+
             if (checkedId == R.id.rb_automatica) {
+                android.util.Log.d("Step4Activity", "Selezionata modalità AUTOMATICA");
                 rbAutomatica.setChecked(true);
                 rbManuale.setChecked(false);
 
@@ -127,6 +131,7 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 updateInfoSelezione();
 
             } else if (checkedId == R.id.rb_manuale) {
+                android.util.Log.d("Step4Activity", "Selezionata modalità MANUALE");
                 rbManuale.setChecked(true);
                 rbAutomatica.setChecked(false);
 
@@ -134,10 +139,14 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 layoutSelezioneManuale.setVisibility(View.VISIBLE);
                 tvDescrizione.setText("Seleziona manualmente gli esperti che preferisci (massimo 3)");
 
+                android.util.Log.d("Step4Activity", "espertiDisponibili.size() = " + espertiDisponibili.size());
+
                 // Carica esperti se non già caricati
                 if (espertiDisponibili.isEmpty()) {
+                    android.util.Log.d("Step4Activity", "Caricando esperti...");
                     loadEsperti();
                 } else {
+                    android.util.Log.d("Step4Activity", "Esperti già caricati, mostrando RecyclerView");
                     // Se già caricati, mostra subito la RecyclerView
                     recyclerViewEsperti.setVisibility(View.VISIBLE);
                     updateInfoSelezione();
@@ -183,10 +192,17 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
         tvErroreEsperti.setVisibility(View.GONE);
         recyclerViewEsperti.setVisibility(View.GONE);
 
-        // Passa i dati del wizard per filtrare esperti appropriati
-        Bundle wizardData = dataManager.getAllWizardData();
-        LoadEspertiTask task = new LoadEspertiTask(this, wizardData);
-        task.execute();
+        try {
+            android.util.Log.d("Step4Activity", "Iniziando caricamento esperti...");
+
+            // ✅ SEMPLIFICATO: Non serve più passare wizardData
+            LoadEspertiTask task = new LoadEspertiTask(this);
+            task.execute();
+
+        } catch (Exception e) {
+            android.util.Log.e("Step4Activity", "Errore nel caricamento esperti", e);
+            onEspertiError("Errore interno: " + e.getMessage());
+        }
     }
 
     private boolean validateStep() {
@@ -389,6 +405,32 @@ public class Step4SelezionaEspertiActivity extends AppCompatActivity
                 espertiAdapter.selezionaEsperto(idEsperto);
             }
         }
+    }
+
+    /**
+     * Forza la visibilità della RecyclerView nella UI thread
+     */
+    private void forceRecyclerViewVisibility() {
+        runOnUiThread(() -> {
+            android.util.Log.d("Step4Activity", "Forzando visibilità RecyclerView nella UI thread...");
+
+            // Forza tutti i container
+            layoutSelezioneManuale.setVisibility(View.VISIBLE);
+            recyclerViewEsperti.setVisibility(View.VISIBLE);
+
+            // Nasconde errori e progress
+            tvErroreEsperti.setVisibility(View.GONE);
+            progressBarEsperti.setVisibility(View.GONE);
+
+            // Forza il refresh del layout
+            recyclerViewEsperti.requestLayout();
+            recyclerViewEsperti.invalidate();
+
+            // Log finale
+            android.util.Log.d("Step4Activity", "RecyclerView forzata: visibility = " +
+                    (recyclerViewEsperti.getVisibility() == View.VISIBLE ? "VISIBLE" : "NOT_VISIBLE"));
+            android.util.Log.d("Step4Activity", "Adapter item count = " + espertiAdapter.getItemCount());
+        });
     }
 
     @Override

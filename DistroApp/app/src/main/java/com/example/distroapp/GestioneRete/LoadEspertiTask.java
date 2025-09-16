@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Task per caricare la lista degli esperti disponibili dal server
- * Filtra gli esperti basandosi sui dati del wizard (distribuzioni, esperienza, etc.)
+ * Task per caricare TUTTI gli esperti disponibili dal server
+ * Versione semplificata senza filtri
  */
 public class LoadEspertiTask extends AsyncTask<Void, Void, LoadEspertiTask.TaskResult> {
 
@@ -46,11 +45,10 @@ public class LoadEspertiTask extends AsyncTask<Void, Void, LoadEspertiTask.TaskR
     }
 
     private WeakReference<OnEspertiLoadedListener> listenerRef;
-    private Bundle wizardData;  // Dati del wizard per filtrare esperti
 
-    public LoadEspertiTask(OnEspertiLoadedListener listener, Bundle wizardData) {
+    // ✅ SEMPLIFICATO: Non serve più Bundle wizardData
+    public LoadEspertiTask(OnEspertiLoadedListener listener) {
         this.listenerRef = new WeakReference<>(listener);
-        this.wizardData = wizardData;
     }
 
     @Override
@@ -58,22 +56,13 @@ public class LoadEspertiTask extends AsyncTask<Void, Void, LoadEspertiTask.TaskR
         HttpURLConnection connection = null;
 
         try {
-            // URL per caricare esperti (puoi filtrare lato server o client)
+            // ✅ SEMPLIFICATO: GET request senza parametri di filtro
             URL url = new URL("http://10.0.2.2:8080/LinuxFinal/DatiSupportoServlet/esperti");
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+            connection.setRequestMethod("GET"); // ← Cambiato da POST a GET
             connection.setRequestProperty("Accept", "application/json");
-            connection.setDoOutput(true);
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
-
-            // Invia i dati del wizard per filtrare gli esperti appropriati
-            String jsonRequest = createFilterRequest();
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonRequest.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -108,102 +97,91 @@ public class LoadEspertiTask extends AsyncTask<Void, Void, LoadEspertiTask.TaskR
     }
 
     /**
-     * Crea la richiesta JSON con i dati del wizard per filtrare esperti appropriati
+     * Parsing del JSON response per creare lista esperti
+     * Versione robusta con gestione errori
      */
-    private String createFilterRequest() throws JSONException {
-        JSONObject request = new JSONObject();
-
-        if (wizardData != null) {
-            // Dati Step 3: Esperienza utente
-            Bundle esperienza = wizardData.getBundle("esperienza");
-            if (esperienza != null) {
-                String livelloEsperienza = esperienza.getString("esperienza", "");
-                if (!livelloEsperienza.isEmpty()) {
-                    request.put("livelloUtenteEsperienza", livelloEsperienza);
-                }
-
-                ArrayList<String> modalita = esperienza.getStringArrayList("modalita");
-                if (modalita != null && !modalita.isEmpty()) {
-                    JSONArray modalitaArray = new JSONArray();
-                    for (String mod : modalita) {
-                        modalitaArray.put(mod);
-                    }
-                    request.put("modalitaUtilizzo", modalitaArray);
-                }
-            }
-
-            // Dati Step 1: Distribuzioni (per matching specializzazioni)
-            @SuppressWarnings("unchecked")
-            ArrayList<Object> distribuzioni = (ArrayList<Object>) wizardData.getSerializable("distribuzioni");
-            if (distribuzioni != null && !distribuzioni.isEmpty()) {
-                JSONArray distroArray = new JSONArray();
-                // Note: Potresti dover convertire gli oggetti DistroSummaryDTO
-                request.put("distribuzioniInteresse", distroArray);
-            }
-
-            // Parametri di filtro
-            request.put("soloDisponibili", true);
-            request.put("maxEsperti", 10);  // Limite risultati
-        }
-
-        return request.toString();
-    }
-
     /**
      * Parsing del JSON response per creare lista esperti
+     * ✅ ADATTATO per il formato JSON del tuo server
      */
     private List<EspertoSelezionatoDTO> parseEspertiFromJson(String jsonString) throws JSONException {
         List<EspertoSelezionatoDTO> esperti = new ArrayList<>();
 
-        JSONObject response = new JSONObject(jsonString);
-        if (!response.optBoolean("success", false)) {
-            throw new JSONException("Response indicates failure");
-        }
+        try {
+            android.util.Log.d("LoadEspertiTask", "JSON ricevuto: " + jsonString);
 
-        JSONArray espertiArray = response.getJSONArray("esperti");
+            // ✅ CORREZIONE: Il tuo server potrebbe restituire direttamente un array
+            JSONArray espertiArray;
 
-        for (int i = 0; i < espertiArray.length(); i++) {
-            JSONObject espertoJson = espertiArray.getJSONObject(i);
-
-            EspertoSelezionatoDTO esperto = new EspertoSelezionatoDTO();
-
-            // Mapping campi obbligatori
-            esperto.setId(espertoJson.getInt("id"));
-            esperto.setNome(espertoJson.getString("nome"));
-            esperto.setCognome(espertoJson.getString("cognome"));
-            esperto.setEmail(espertoJson.getString("email"));
-
-            // Campi profilo esperto
-            if (espertoJson.has("specializzazione")) {
-                esperto.setSpecializzazione(espertoJson.getString("specializzazione"));
+            // Prova prima come oggetto con array "esperti"
+            try {
+                JSONObject response = new JSONObject(jsonString);
+                if (response.has("esperti")) {
+                    espertiArray = response.getJSONArray("esperti");
+                } else {
+                    // Se non ha il wrapper, prova come array diretto
+                    espertiArray = new JSONArray(jsonString);
+                }
+            } catch (JSONException e) {
+                // Se fallisce, prova come array diretto
+                espertiArray = new JSONArray(jsonString);
             }
 
-            if (espertoJson.has("anniEsperienza")) {
-                esperto.setAnniEsperienza(espertoJson.getInt("anniEsperienza"));
+            android.util.Log.d("LoadEspertiTask", "Parsing " + espertiArray.length() + " esperti");
+
+            for (int i = 0; i < espertiArray.length(); i++) {
+                try {
+                    JSONObject espertoJson = espertiArray.getJSONObject(i);
+                    EspertoSelezionatoDTO esperto = new EspertoSelezionatoDTO();
+
+                    // ✅ CAMPI DEL TUO JSON - Obbligatori
+                    esperto.setId(espertoJson.optInt("id", -1));
+                    if (esperto.getId() == -1) {
+                        android.util.Log.w("LoadEspertiTask", "Esperto senza ID valido, saltato");
+                        continue;
+                    }
+
+                    // ✅ CORREZIONE: Il tuo JSON usa "nome" per l'email
+                    String nomeEmail = espertoJson.optString("nome", "Esperto");
+                    if (nomeEmail.contains("@")) {
+                        // È un'email, estrai il nome
+                        String nomeEstratto = nomeEmail.split("@")[0].replace(".", " ");
+                        esperto.setNome(nomeEstratto);
+                        esperto.setEmail(nomeEmail);
+                    } else {
+                        esperto.setNome(nomeEmail);
+                        esperto.setEmail("");
+                    }
+
+                    // ✅ CAMPI MANCANTI - Usa valori di default
+                    esperto.setCognome(""); // Non presente nel tuo JSON
+
+                    esperto.setSpecializzazione(espertoJson.optString("specializzazione", "Esperto Linux"));
+                    esperto.setAnniEsperienza(espertoJson.optInt("anniEsperienza", 1));
+
+                    // ✅ CAMPI CON DEFAULT
+                    esperto.setLivelloEsperienza("ESPERTO"); // Non presente, usa default
+                    esperto.setFeedbackMedio(espertoJson.optDouble("feedbackMedio", 0.0));
+                    esperto.setNumeroValutazioni(espertoJson.optInt("numeroValutazioni", 0));
+                    esperto.setDisponibile(true); // Non presente, assume disponibile
+                    esperto.setBio(null); // Non presente nel tuo JSON
+
+                    esperti.add(esperto);
+
+                    android.util.Log.d("LoadEspertiTask", "Aggiunto esperto: " + esperto.getNome() +
+                            " - " + esperto.getSpecializzazione());
+
+                } catch (Exception e) {
+                    android.util.Log.e("LoadEspertiTask", "Errore parsing esperto " + i, e);
+                    // Continua con il prossimo esperto
+                }
             }
 
-            if (espertoJson.has("livelloEsperienza")) {
-                esperto.setLivelloEsperienza(espertoJson.getString("livelloEsperienza"));
-            }
+            android.util.Log.d("LoadEspertiTask", "Parsing completato: " + esperti.size() + " esperti validi");
 
-            // Feedback e valutazioni
-            if (espertoJson.has("feedbackMedio")) {
-                esperto.setFeedbackMedio(espertoJson.getDouble("feedbackMedio"));
-            }
-
-            if (espertoJson.has("numeroValutazioni")) {
-                esperto.setNumeroValutazioni(espertoJson.getInt("numeroValutazioni"));
-            }
-
-            // Disponibilità
-            esperto.setDisponibile(espertoJson.optBoolean("disponibile", true));
-
-            // Bio opzionale
-            if (espertoJson.has("bio")) {
-                esperto.setBio(espertoJson.getString("bio"));
-            }
-
-            esperti.add(esperto);
+        } catch (JSONException e) {
+            android.util.Log.e("LoadEspertiTask", "Errore parsing JSON", e);
+            throw e;
         }
 
         return esperti;

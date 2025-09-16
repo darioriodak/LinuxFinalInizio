@@ -58,7 +58,7 @@ public class InviaRichiestaTask extends AsyncTask<RichiestaUtente, Void, InviaRi
 
         try {
             // URL del tuo endpoint esistente
-            URL url = new URL("http://10.0.2.2:8080/LinuxFinal/RichiesteServlet/crea");
+            URL url = new URL("http://10.0.2.2:8080/LinuxFinal/RichiesteServlet/nuova");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; utf-8");

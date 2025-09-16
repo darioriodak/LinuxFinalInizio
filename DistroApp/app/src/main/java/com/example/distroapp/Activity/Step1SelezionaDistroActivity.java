@@ -13,6 +13,7 @@ import com.example.distroapp.R;
 import com.example.distroapp.Adapter.DistroSummaryAdapter;
 import com.example.distroapp.Entity.DistroSummaryDTO;
 import com.example.distroapp.GestioneRete.LoadDistroSummaryTask;
+import com.example.distroapp.Util.WizardDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,9 +167,22 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
         }
         editor.putString("distribuzioni_selezionate", selectedIds.toString());
 
+        // ✅ AGGIUNTO: Debug logging
+        android.util.Log.d("Step1Activity", "=== SAVE CURRENT DATA ===");
+        android.util.Log.d("Step1Activity", "Distribuzioni selezionate: " + distribuzioniSelezionate.size());
+        android.util.Log.d("Step1Activity", "IDs salvati: " + selectedIds.toString());
 
+        // ✅ AGGIUNTO: Salva anche usando WizardDataManager per consistenza
+        WizardDataManager dataManager = new WizardDataManager(this);
+        List<Integer> ids = new ArrayList<>();
+        for (DistroSummaryDTO distro : distribuzioniSelezionate) {
+            ids.add(distro.getId());
+            android.util.Log.d("Step1Activity", "Aggiunto ID: " + distro.getId() + " - " + distro.getNomeDisplay());
+        }
+        dataManager.saveStep1Data(ids, ""); // Motivazione vuota per ora
 
         editor.apply();
+        android.util.Log.d("Step1Activity", "Dati salvati in SharedPreferences e WizardDataManager");
     }
 
     private void loadSavedData() {
@@ -182,16 +196,31 @@ public class Step1SelezionaDistroActivity extends AppCompatActivity
     }
 
     private void proceedToNextStep() {
+        android.util.Log.d("Step1Activity", "=== PROCEED TO NEXT STEP ===");
+        android.util.Log.d("Step1Activity", "Distribuzioni selezionate: " + distribuzioniSelezionate.size());
+
+        // ✅ IMPORTANTE: Salva i dati prima di procedere
+        saveCurrentData();
+
+        // ✅ VERIFICA: Controlla che i dati siano stati salvati
+        WizardDataManager testManager = new WizardDataManager(this);
+        Bundle testData = testManager.getStep1Data();
+        ArrayList<Integer> testIds = testData.getIntegerArrayList("distribuzioniIds");
+        android.util.Log.d("Step1Activity", "Verifica salvataggio - IDs recuperati: " +
+                (testIds != null ? testIds.toString() : "NULL"));
+
         Intent intent = new Intent(this, Step3EsperienzaActivity.class);
 
-        // Passa i dati al prossimo step
+        // Passa i dati al prossimo step (per compatibilità)
         ArrayList<Integer> selectedIds = new ArrayList<>();
         for (DistroSummaryDTO distro : distribuzioniSelezionate) {
             selectedIds.add(distro.getId());
+            android.util.Log.d("Step1Activity", "Passando ID: " + distro.getId());
         }
         intent.putIntegerArrayListExtra("distribuzioni_selezionate", selectedIds);
 
         startActivity(intent);
+        android.util.Log.d("Step1Activity", "Navigazione a Step3 completata");
     }
 
     // Implementazione callback per il caricamento distribuzioni

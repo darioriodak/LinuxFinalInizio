@@ -57,13 +57,21 @@ public class EspertiAdapter extends RecyclerView.Adapter<EspertiAdapter.EspertoV
     }
 
     public void updateEsperti(List<EspertoSelezionatoDTO> nuoviEsperti) {
+        android.util.Log.d("EspertiAdapter", "updateEsperti chiamato con " +
+                (nuoviEsperti != null ? nuoviEsperti.size() : 0) + " esperti");
+
         this.esperti.clear();
         if (nuoviEsperti != null) {
             this.esperti.addAll(nuoviEsperti);
         }
-        notifyDataSetChanged();
-    }
 
+        android.util.Log.d("EspertiAdapter", "Adapter ora ha " + this.esperti.size() + " esperti");
+        android.util.Log.d("EspertiAdapter", "Chiamando notifyDataSetChanged()...");
+
+        notifyDataSetChanged();
+
+        android.util.Log.d("EspertiAdapter", "getItemCount() ritorna: " + getItemCount());
+    }
     public List<EspertoSelezionatoDTO> getEspertiSelezionati() {
         return new ArrayList<>(espertiSelezionati);
     }
@@ -97,8 +105,12 @@ public class EspertiAdapter extends RecyclerView.Adapter<EspertiAdapter.EspertoV
         }
 
         public void bind(EspertoSelezionatoDTO esperto) {
-            // Nome completo
-            tvNomeEsperto.setText(esperto.getNomeCompleto());
+            // Nome completo (gestisce campi mancanti)
+            String nomeCompleto = esperto.getNomeCompleto();
+            if (nomeCompleto == null || nomeCompleto.trim().isEmpty()) {
+                nomeCompleto = "Esperto #" + esperto.getId();
+            }
+            tvNomeEsperto.setText(nomeCompleto);
 
             // Icona specializzazione
             tvIconaSpecializzazione.setText(esperto.getIconaSpecializzazione());
@@ -113,27 +125,27 @@ public class EspertiAdapter extends RecyclerView.Adapter<EspertiAdapter.EspertoV
             // Anni di esperienza
             tvEsperienza.setText(esperto.getEsperienzaFormatted() + " di esperienza");
 
-            // Feedback formattato
-            if (esperto.getNumeroValutazioni() > 0) {
+            // ✅ CORREZIONE: Gestione feedback con controllo per zero
+            if (esperto.getNumeroValutazioni() > 0 && esperto.getFeedbackMedio() > 0) {
                 String feedbackText = esperto.getFeedbackFormatted() +
                         " (" + esperto.getNumeroValutazioni() + " valutazioni)";
                 tvFeedback.setText(feedbackText);
                 tvStelle.setText(esperto.getFeedbackStars());
                 tvStelle.setVisibility(View.VISIBLE);
             } else {
-                tvFeedback.setText("Nessuna valutazione ancora");
+                tvFeedback.setText("Nuovo esperto - Nessuna valutazione");
                 tvStelle.setVisibility(View.GONE);
             }
 
-            // Stato disponibilità
-            tvStatoDisponibilita.setText(esperto.getStatoDisponibilita());
+            // ✅ CORREZIONE: Stato disponibilità sempre disponibile
+            tvStatoDisponibilita.setText("Disponibile");
             try {
-                tvStatoDisponibilita.setTextColor(Color.parseColor(esperto.getColoreStato()));
+                tvStatoDisponibilita.setTextColor(Color.parseColor("#4CAF50"));
             } catch (IllegalArgumentException e) {
                 tvStatoDisponibilita.setTextColor(Color.parseColor("#4CAF50"));
             }
 
-            // Bio (se presente)
+            // ✅ CORREZIONE: Bio nascosta se non presente
             if (esperto.getBio() != null && !esperto.getBio().isEmpty()) {
                 tvBio.setText(esperto.getBio());
                 tvBio.setVisibility(View.VISIBLE);
@@ -141,52 +153,38 @@ public class EspertiAdapter extends RecyclerView.Adapter<EspertiAdapter.EspertoV
                 tvBio.setVisibility(View.GONE);
             }
 
-            // Disabilita se non disponibile
-            boolean isClickable = esperto.isDisponibile();
+            // ✅ CORREZIONE: Sempre cliccabile dato che assumiamo disponibile
+            boolean isClickable = true;
             checkBoxEsperto.setEnabled(isClickable);
             cardEsperto.setEnabled(isClickable);
-
-            if (!isClickable) {
-                cardEsperto.setAlpha(0.6f);
-            } else {
-                cardEsperto.setAlpha(1.0f);
-            }
+            cardEsperto.setAlpha(1.0f);
 
             // Gestione selezione checkbox
-            checkBoxEsperto.setOnCheckedChangeListener(null); // Rimuovi listener temporaneamente
+            checkBoxEsperto.setOnCheckedChangeListener(null);
             checkBoxEsperto.setChecked(esperto.isSelected());
 
-            if (isClickable) {
-                checkBoxEsperto.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        // Controlla il limite massimo di selezioni
-                        if (espertiSelezionati.size() >= MAX_SELEZIONI) {
-                            checkBoxEsperto.setChecked(false);
-                            // Potresti mostrare un Toast qui se hai accesso al Context
-                            return;
-                        }
-
-                        esperto.setSelected(true);
-                        espertiSelezionati.add(esperto);
-                    } else {
-                        esperto.setSelected(false);
-                        espertiSelezionati.remove(esperto);
+            checkBoxEsperto.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    if (espertiSelezionati.size() >= MAX_SELEZIONI) {
+                        checkBoxEsperto.setChecked(false);
+                        return;
                     }
+                    esperto.setSelected(true);
+                    espertiSelezionati.add(esperto);
+                } else {
+                    esperto.setSelected(false);
+                    espertiSelezionati.remove(esperto);
+                }
 
-                    // Notifica il listener
-                    if (listener != null) {
-                        listener.onEspertiSelezionati(getEspertiSelezionati());
-                    }
-                });
+                if (listener != null) {
+                    listener.onEspertiSelezionati(getEspertiSelezionati());
+                }
+            });
 
-                // Click sull'intera card per toggle della selezione
-                cardEsperto.setOnClickListener(v -> {
-                    if (esperto.isDisponibile()) {
-                        checkBoxEsperto.setChecked(!checkBoxEsperto.isChecked());
-                    }
-                });
-            }
-
+            // Click sull'intera card per toggle della selezione
+            cardEsperto.setOnClickListener(v -> {
+                checkBoxEsperto.setChecked(!checkBoxEsperto.isChecked());
+            });
         }
     }
 
